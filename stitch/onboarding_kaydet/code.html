@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=Noto+Sans:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ec5b13",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221610",
+          },
+          fontFamily: {
+            "display": ["Public Sans"],
+            "sans": ["Public Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-sans text-background-dark">
+<!-- Hierarchy of Focus Logic: This is a "Process" screen (Onboarding). Shared navigation (TopAppBar/BottomNavBar) is excluded. -->
+<div class="relative flex min-h-screen w-full flex-col bg-background-light overflow-x-hidden">
+<!-- Top Progress/Back Navigation (Minimal for Focused Views) -->
+<div class="flex items-center p-4 justify-between">
+<button class="flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-background-dark" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex-1 text-center pr-10">
+<span class="text-sm font-bold uppercase tracking-widest text-primary">Gündemio</span>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="flex flex-col grow items-center px-6 pt-10">
+<!-- Illustration Container -->
+<div class="w-full @container mb-12">
+<div class="relative w-full aspect-square max-w-[320px] mx-auto flex items-center justify-center rounded-xl overflow-hidden bg-primary/10">
+<!-- Abstract bookmark/reading list visual represented by a styled element -->
+<div class="flex flex-col gap-4 w-3/4 h-3/4 bg-white rounded-lg shadow-xl p-6 border border-primary/20">
+<div class="h-4 w-2/3 bg-primary/20 rounded"></div>
+<div class="h-4 w-full bg-primary/20 rounded"></div>
+<div class="h-4 w-1/2 bg-primary/20 rounded"></div>
+<div class="mt-auto flex justify-end">
+<span class="material-symbols-outlined text-primary text-5xl" data-icon="bookmarks" style="font-variation-settings: 'FILL' 1;">bookmarks</span>
+</div>
+</div>
+<!-- Decorative Background Shape -->
+<div class="absolute -z-10 w-48 h-48 bg-primary rounded-full blur-3xl opacity-20"></div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="text-center space-y-4 max-w-sm">
+<h1 class="text-background-dark tracking-tight text-3xl font-bold leading-tight">Kaydet, sonra oku</h1>
+<p class="text-background-dark/70 text-base font-normal leading-relaxed">
+          İlginizi çeken haberleri favorilerinize ekleyin ve dilediğiniz zaman çevrimdışı okuyun.
+        </p>
+</div>
+<!-- Page Indicator Dots (3/3 active) -->
+<div class="flex flex-row items-center justify-center gap-3 py-10 mt-auto">
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2 w-2 rounded-full bg-primary/20"></div>
+<div class="h-2 w-6 rounded-full bg-primary"></div>
+</div>
+<!-- Call to Action Buttons -->
+<div class="w-full space-y-3 pb-8">
+<button class="w-full py-4 px-6 bg-primary text-white font-bold rounded-xl text-lg transition-colors hover:bg-primary/90">
+          Başla
+        </button>
+<button class="w-full py-4 px-6 bg-transparent text-background-dark/60 font-bold rounded-xl text-base transition-colors hover:text-background-dark">
+          Misafir olarak devam et
+        </button>
+</div>
+</div>
+</div>
+</body></html>

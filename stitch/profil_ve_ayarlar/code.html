@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f6f6;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-slate-900">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light overflow-x-hidden pb-20">
+<!-- Header Section (Derived from Brand Style) -->
+<div class="flex items-center bg-white border-b border-slate-200 p-4 sticky top-0 z-10 justify-between">
+<div class="text-slate-800 flex size-10 shrink-0 items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Profil ve Ayarlar</h2>
+</div>
+<!-- Profile Hero Section -->
+<div class="flex p-6 @container bg-white border-b border-slate-100">
+<div class="flex w-full flex-col gap-4 items-center">
+<div class="flex gap-4 flex-col items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 border-4 border-primary/10" data-alt="Close-up portrait of a professional man with a friendly expression in soft studio lighting against a neutral background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAcCxP4JPmW71pfAsjoc4Ph1r8JsVtThluoJbBfpQRi2r2hfieUvw9mhmpDxRNuaDPvt6_BjoE7nXcqgkFHhhx95zyyvCmAd0xV855qtLXNR2cfwHPo0o3jRTU9mnJV1Q3z_GHieiYu-EN0QLGBQ9pvnyvgfqn6-J2Vn7tm9W_vMTq_OmMZIdke3c0VblMQZV0z2BvIqJRPTdC9Aw7WMejnoSDnog2L0k43aN1BJStRjYaFSbPLpGFbV2xuuf-UwKI9w7WtEOHNEEE")'>
+</div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-slate-900 text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">Ahmet Yılmaz</p>
+<div class="mt-2 px-3 py-1 bg-primary/10 rounded-full">
+<p class="text-primary text-xs font-semibold leading-normal text-center">Giriş Yapmış Kullanıcı</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Settings List -->
+<div class="flex flex-col mt-4 bg-white">
+<!-- Item: Interests -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">tag</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">İlgi Alanlarım</p>
+</div>
+<div class="shrink-0 text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item: Sources -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">list_alt</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">Kaynak Tercihlerim</p>
+</div>
+<div class="shrink-0 text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item: Dark Mode Toggle -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">dark_mode</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">Koyu Tema</p>
+</div>
+<div class="shrink-0">
+<div class="w-12 h-6 bg-slate-200 rounded-full relative">
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+<!-- Item: Notifications -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">Bildirimler</p>
+</div>
+<div class="shrink-0 text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item: Privacy -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">shield_person</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">Gizlilik ve Güvenlik</p>
+</div>
+<div class="shrink-0 text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+<!-- Item: About -->
+<div class="flex items-center gap-4 border-b border-slate-50 px-4 min-h-[64px] justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/5 shrink-0 size-10">
+<span class="material-symbols-outlined">info</span>
+</div>
+<p class="text-slate-800 text-base font-medium leading-normal flex-1 truncate">Uygulama Hakkında</p>
+</div>
+<div class="shrink-0 text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Logout Button Section -->
+<div class="p-6 mt-4">
+<button class="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-slate-100 text-rose-600 font-bold hover:bg-rose-50 transition-colors border border-rose-100">
+<span class="material-symbols-outlined">logout</span>
+                Çıkış Yap
+            </button>
+</div>
+<!-- Version Info -->
+<div class="flex flex-col items-center justify-center py-4 mb-10 opacity-40">
+<p class="text-xs text-slate-500 font-medium">Gündemio v2.4.0 (Build 842)</p>
+<p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest">Proudly made for news junkies</p>
+</div>
+<!-- Shared Bottom Navigation Bar (Modified for Color Continuity) -->
+<div class="fixed bottom-0 left-0 right-0 z-50">
+<div class="flex gap-2 border-t border-slate-200 bg-white px-4 pb-3 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="Newspaper" data-size="24px" data-weight="regular">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M88,112a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H96A8,8,0,0,1,88,112Zm8,40h80a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM232,64V184a24,24,0,0,1-24,24H32A24,24,0,0,1,8,184.11V88a8,8,0,0,1,16,0v96a8,8,0,0,0,16,0V64A16,16,0,0,1,56,48H216A16,16,0,0,1,232,64Zm-16,0H56V184a23.84,23.84,0,0,1-1.37,8H208a8,8,0,0,0,8-8Z"></path>
+</svg>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Haberler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+</svg>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Keşfet</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,16V161.57l-51.77-32.35a8,8,0,0,0-8.48,0L72,161.56V48ZM132.23,177.22a8,8,0,0,0-8.48,0L72,209.57V180.43l56-35,56,35v29.14Z"></path>
+</svg>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Kaydedilenler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="fill">
+<svg fill="currentColor" height="24px" style="filter: drop-shadow(0 0 8px rgba(236, 91, 19, 0.2));" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"></path>
+</svg>
+</div>
+<p class="text-primary text-xs font-bold leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

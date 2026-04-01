@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "sans": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-sans text-background-dark">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white shadow-lg overflow-x-hidden">
+<!-- Header -->
+<div class="flex items-center bg-white p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-background-dark flex size-12 shrink-0 items-center cursor-pointer" data-icon="ArrowLeft" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-background-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1">Kaynaklar</h2>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-3 bg-white">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full border border-gray-200 bg-gray-50">
+<div class="text-gray-500 flex items-center justify-center pl-4" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-background-dark focus:outline-0 focus:ring-0 border-none bg-transparent focus:border-none h-full placeholder:text-gray-400 px-4 pl-2 text-base font-normal leading-normal" placeholder="Haber kaynağı ara" value=""/>
+</div>
+</label>
+</div>
+<!-- Tabs -->
+<div class="pb-1 bg-white">
+<div class="flex border-b border-gray-100 px-4 gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Tümü</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-gray-500 pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Takip Ettiklerim</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-gray-500 pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Önerilen</p>
+</a>
+</div>
+</div>
+<!-- Publisher List -->
+<div class="flex-1 overflow-y-auto pb-20">
+<!-- Source Item 1 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Professional news agency logo with clean red and white typography on a neutral background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC3JxJgrooMULa4MX4qeNNJneZ74hgOIFmFW3AQ3pDzBVwh34ZgrqMP25w0DopeQ0lMRXGLMWFqGFN2B0zmL4XtHsjeF-hgertBgOAOUIYbpQqEpnWs_syu5hQ7qcKlWhg8cweqcjAW8JjhygCYGe4Ew0LfSaK-TxS1MrKjKjHS74cmqalwIctxOLln-53pRuuuhIqhuzck_M1Z2hX24uBDYuOt8eFtRBG9yE2TnmpeYMypPdVCeqAvUoeC7cFu_705qP2F9IdUNEM");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">CNN Türk</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Gündem • 1.2M Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[90px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-primary text-white text-sm font-bold leading-normal shadow-sm active:scale-95 transition-transform">
+<span class="truncate">Takip Et</span>
+</button>
+</div>
+</div>
+<!-- Source Item 2 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Modern tech blog circular logo with vibrant digital patterns and minimalist icon style" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC-bC8bYZA7oKy6bStGxIliZ7VGZGAmike_FqFabxCjKgzm5kIheCvDCL_qY9saJ-6S3MCgAEJ-pmZpEQyhx5dl5WHMWhBLO0NucQwcJiOjf_nYS5OcnARjTci91Q6Goc-3tv4YMKEgKeofoRyb-FWPLFX0Xr6Ae5bQkzIr698CbhS4JTQ4grayXt5Oz1RqkLKak4DZCd89MZezJ1bPL15suB_-bCccAfBIrX5i0GGP2YN5fdzUBrZ65CLDqSIZQ3EQ25udgchWxOs");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">Webrazzi</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Teknoloji • 450K Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-white border border-primary text-primary text-sm font-bold leading-normal transition-colors">
+<span class="truncate">Takip Ediliyor</span>
+</button>
+</div>
+</div>
+<!-- Source Item 3 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Classical newspaper masthead logo in black ink on aged paper texture circular frame" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCq83dPyxqOYa6icJcQjfOvwIFEd7HWU6-KnjiTJmlIfXCL_qapBnBlfZRn02uo2fOR9p3AzgJHys7qmB6pUeU_IesOXgEubeqHu_Ohw_E9aen5DA4TfQSU8sHXNt2gZf1KTtymN-tu4EJ9ORADn2O2SBfM8rYGLuYWecyCmew0EBWRKwZr5n85elh7D644Xn_aPfdHpkEUQfdI7A-I6_9yD-XBWmJvLjQ87cokZQwGHPROg-PEF3gGcgMY-TeAqRmOo-sHnoosqnw");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">Sözcü</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Gündem • 900K Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[90px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-primary text-white text-sm font-bold leading-normal shadow-sm active:scale-95 transition-transform">
+<span class="truncate">Takip Et</span>
+</button>
+</div>
+</div>
+<!-- Source Item 4 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Dynamic sports brand logo featuring athletic elements and bold typography in a circular badge" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQyRWJ3O93YWrphc8hQvuBAgx-fmTpXd93_97aDQeAHDLGFIEHh-Q4bGwzyFht-OuF-TMQ809wtgmPHrQxBnCzSiNzjG7Xs35NX9XlfWGtFIOaO3ofD3unEofhviuq5JvGeZgtMCW8lKRpotDjxslwIAgb7qOKuCy6il10GFQfCb3E1yrhTUbm1qDFy9RuBeeUe9lJoepj7RYfoUEDqeEWrnEY8inopOGrbHaeQsxta3IiG7NYdH3z6IHVVyMBnICpv3YvOzHxLU4");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">TRT Spor</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Spor • 600K Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[90px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-primary text-white text-sm font-bold leading-normal shadow-sm active:scale-95 transition-transform">
+<span class="truncate">Takip Et</span>
+</button>
+</div>
+</div>
+<!-- Source Item 5 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Financial publication logo with elegant serif fonts and gold accents in a circular frame" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDTqBHD7pYvut2oMAExBip4X8bEPWs3uRiqiNyuwkfpjuf_tIZOQdUvBQkjF8oaTkTrpqzduTrV1PDlvM-e0AGWkfPT3Z6X6vNKqLeHztBvYXgKJ4hQqD8cVQCymnLZ7hpPRIKMU_nH_n4r7vLxEcnqiOL0yyoZkyC3q06nyceA0n4hH2BkADo2M1fR11yOxKDFsEin6n-MzXf4e3pfREbL-8kRKT-eq50NkSp-gwlQa46OC0sdmTsIwXcLytpZ5Ak38wZ50seXmE4");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">Bloomberg HT</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Ekonomi • 320K Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[90px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-primary text-white text-sm font-bold leading-normal shadow-sm active:scale-95 transition-transform">
+<span class="truncate">Takip Et</span>
+</button>
+</div>
+</div>
+<!-- Source Item 6 -->
+<div class="flex items-center gap-4 bg-white px-4 min-h-[80px] py-3 justify-between border-b border-gray-50">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border border-gray-100" data-alt="Vibrant entertainment and lifestyle magazine logo with colorful abstract shapes in a circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB7YaxGhpDebwMdguENhIm8kV6CZ92z56g5F91ftZ9cZr9wBNqgCZxL_VHn_gEIic4JO0VLPBh8olBzixpkRA_5_cWjVhoPdBimr1f_xki35TndZWXl1XtOqxxcnPvWFD7erHYN4dBzUJ4sYW2s3L9Hum-sAmwMNO3TE00gACsLC0BgJNt7mA6hn2SZ-P1ZndK263M4PPjC8sqYrVjm0Z-a-eZtJmPw1Ef_XlLc3TMVDj9h8pWSOWVPzaoFng6mqAU4yumGMNol9qQ");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-background-dark text-base font-semibold leading-normal line-clamp-1">Hürriyet Kelebek</p>
+<p class="text-gray-500 text-sm font-normal leading-normal line-clamp-1">Magazin • 850K Takipçi</p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-white border border-primary text-primary text-sm font-bold leading-normal transition-colors">
+<span class="truncate">Takip Ediliyor</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Shared Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-20">
+<div class="flex gap-2 border-t border-[#4b2038] bg-[#361728] px-4 pb-3 pt-2">
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#ce8db1]" href="#">
+<div class="text-[#ce8db1] flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-[#ce8db1] text-xs font-medium leading-normal tracking-[0.015em]">Ana Sayfa</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#ce8db1]" href="#">
+<div class="text-[#ce8db1] flex h-8 items-center justify-center" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search</span>
+</div>
+<p class="text-[#ce8db1] text-xs font-medium leading-normal tracking-[0.015em]">Keşfet</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
+<div class="text-white flex h-8 items-center justify-center" data-icon="Books" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<p class="text-white text-xs font-medium leading-normal tracking-[0.015em]">Kaynaklar</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#ce8db1]" href="#">
+<div class="text-[#ce8db1] flex h-8 items-center justify-center" data-icon="Person" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[#ce8db1] text-xs font-medium leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

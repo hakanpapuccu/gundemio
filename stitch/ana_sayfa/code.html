@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gündemio - Haberler</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display">
+<div class="relative flex h-auto min-h-screen w-full max-w-md mx-auto flex-col bg-white shadow-lg overflow-x-hidden pb-20">
+<!-- Header Section -->
+<header class="flex items-center bg-white p-4 sticky top-0 z-10 justify-between border-b border-gray-100">
+<h2 class="text-background-dark text-xl font-bold leading-tight tracking-[-0.015em] flex-1">Gündemio</h2>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-full p-2 text-background-dark hover:bg-gray-100">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="flex items-center justify-center rounded-full p-2 text-background-dark hover:bg-gray-100">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Category Chips -->
+<div class="flex gap-3 p-4 overflow-x-auto no-scrollbar whitespace-nowrap bg-white">
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary px-5 text-white">
+<p class="text-sm font-semibold leading-normal">Tümü</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-700">
+<p class="text-sm font-medium leading-normal">Gündem</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-700">
+<p class="text-sm font-medium leading-normal">Teknoloji</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-700">
+<p class="text-sm font-medium leading-normal">Ekonomi</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-700">
+<p class="text-sm font-medium leading-normal">Spor</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-5 text-gray-700">
+<p class="text-sm font-medium leading-normal">Dünya</p>
+</div>
+</div>
+<!-- Main Feed -->
+<main class="flex flex-col gap-2">
+<!-- Featured Story Card -->
+<div class="px-4 py-2 @container">
+<div class="flex flex-col items-stretch justify-start rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover" data-alt="Modern robotic hand touching a digital interface with glowing blue light particles in a dark futuristic setting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwRKMA-6IbtgjWyBoc-ByOorSar2Hrq2pybUe18TpaMcUxjOf8tVNMW6feRa6Epk1BGrrhxYKoIKhTyXzW-OKiJBKwA4bAviR89aVLUNFY7XM0Ur1tuA1fvvVHp5dopzqFJR--EiW9kg81Kg5ge22eJACOuOHUJ0la-e7oyO2iy7gWnkTzpjVUe2bAhTyFx1JuoRqQqAS6nXmEgE-sWOITAdmoa2caPvJiCXHedlVwH9SJWniLH3f1UNKD1s06mCmTKhdVXE9Dn88");'>
+</div>
+<div class="flex w-full flex-col gap-2 p-4">
+<span class="inline-flex items-center rounded-md bg-orange-100 px-2 py-1 text-xs font-bold text-primary w-fit uppercase tracking-wider">Teknoloji</span>
+<h3 class="text-background-dark text-xl font-bold leading-tight">Yapay Zekada Yeni Dönem</h3>
+<div class="flex items-center gap-2">
+<p class="text-gray-500 text-sm font-normal">TechNews • 2 saat önce</p>
+</div>
+</div>
+</div>
+</div>
+<!-- List Card 1 -->
+<div class="flex gap-4 bg-white px-4 py-4 border-b border-gray-50">
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex flex-col gap-1">
+<h3 class="text-background-dark text-base font-bold leading-tight">Borsa İstanbul Haftaya Yükselişle Başladı</h3>
+<p class="text-gray-500 text-sm font-normal line-clamp-2">Hisse senetleri değer kazandı, yatırımcılar yeni ekonomik verileri bekliyor...</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-gray-400 text-xs font-medium">Ekonomi Gündemi • 1 saat önce</p>
+<button class="text-gray-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+</div>
+<div class="shrink-0 w-24 h-24 rounded-lg bg-center bg-cover bg-no-repeat" data-alt="Close-up of a stock market chart showing green upward candles on a digital monitor screen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAn9mkywPFznHi2U3usCxOMnZSGiV5xuC0g6dKiXjIjy1g9AASpAZdT1R9s1p3avCKCHrw0pbtHcwWRVyH83_U96T4nfaMCkF8Z9uEUP0L3eLk5fEhhwFEr2a9qwEPP7ao5p9i_pfWyAO3ZIaEUB-uTzKYJbUnvttGkNVhu1zFZuCh-tfIMZ4xy_EHeGjh4uo-sayEsHRM3d5tifFaL7rgzZjOj5aWiFJ87krlrU-5klTPdrNS24YSyzxGUse75aPoeoKH6PNf_H-o");'>
+</div>
+</div>
+<!-- List Card 2 -->
+<div class="flex gap-4 bg-white px-4 py-4 border-b border-gray-50">
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex flex-col gap-1">
+<h3 class="text-background-dark text-base font-bold leading-tight">Derbi Hazırlıkları Tamamlandı</h3>
+<p class="text-gray-500 text-sm font-normal line-clamp-2">Hafta sonu oynanacak büyük maç öncesi takımlar son antrenmanlarını gerçekleştirdi.</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-gray-400 text-xs font-medium">SporArena • 30 dk önce</p>
+<button class="text-gray-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+</div>
+<div class="shrink-0 w-24 h-24 rounded-lg bg-center bg-cover bg-no-repeat" data-alt="Wide shot of a professional football stadium at night under bright stadium lights with green grass" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuARE-gxjWOGIzEcp_IQT5-Clsm97vpcEaQvkQKkThFNBhAlXLlTwhA66JUjOWWElXRUGngWv4Kt4TxPHiSLZuCskmrBeWAXFgjk7yB8t2j8G3oP1vXxo6SeffM0JwRHD4KQmJyZq_WkbpeRNlepXO4Gh2q2N7D4VApG5Pg6Wr4nfRnNmdaawW-Xmgzcki9L3Oi-E_pUJcy4nGKrZO4UmzMatmJRpAiGMEZR2uUtsSkbN0rLkYAl2AkNPRfTFEKG7bsye3fEbhJUTrI");'>
+</div>
+</div>
+<!-- List Card 3 -->
+<div class="flex gap-4 bg-white px-4 py-4 border-b border-gray-50">
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex flex-col gap-1">
+<h3 class="text-background-dark text-base font-bold leading-tight">Küresel Isınma Raporu Açıklandı</h3>
+<p class="text-gray-500 text-sm font-normal line-clamp-2">Birleşmiş Milletler, dünya genelinde sıcaklık artışına dair son verileri paylaştı.</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-gray-400 text-xs font-medium">Dünya Gündemi • 4 saat önce</p>
+<button class="text-gray-400 hover:text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+</div>
+<div class="shrink-0 w-24 h-24 rounded-lg bg-center bg-cover bg-no-repeat" data-alt="High altitude view of majestic mountain peaks covered in snow with a clear blue sky background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAz4w25XBPaYvIbGmZvSk2EWeijPed18xUgfDnWDedNVsZLTToOFx4XPm_f7qgX97kWgpPlGyr-v2NBHWnC2GMk0YitOg0i6Sx3TeL2qtZTjr_VLQPfKIU_orKVuficNrGy8hj9ukbnvEj9ZbpJtmCo7lxjL0SNYyAIx6JBM9jKwQWS395GRKZ-Wi6ors9AJEIbuwGmMIkMxCuvuIsCqjbNnO3NhHJ8LgFbEhPFrB1UzlduiMyrEks1-BxpI7iHeQOSWyOLYvZAoA4");'>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md border-t border-gray-200 bg-white px-4 pb-3 pt-2">
+<div class="flex gap-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="home" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<p class="text-xs font-bold leading-normal tracking-[0.015em]">Ana Sayfa</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="grid_view" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined text-[24px]">grid_view</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Kategoriler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="search" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Ara</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined text-[24px]">bookmark</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Kaydedilenler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="person" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

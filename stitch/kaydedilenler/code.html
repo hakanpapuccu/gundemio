@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"],
+                        "sans": ["Public Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-sans text-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light overflow-x-hidden">
+<!-- Header / Top Bar -->
+<div class="flex items-center bg-white border-b border-gray-200 p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="text-background-dark flex size-12 shrink-0 items-center cursor-pointer" data-icon="ArrowLeft" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-background-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1">Kaydedilenler</h2>
+<div class="size-12 flex items-center justify-end">
+<span class="material-symbols-outlined text-background-dark">more_vert</span>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="flex px-4 py-3 bg-white">
+<div class="flex h-11 flex-1 items-center justify-center rounded-xl bg-gray-100 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-gray-600 text-sm font-semibold transition-all">
+<span class="truncate">Tümü</span>
+<input checked="" class="invisible w-0" name="filter-toggle" type="radio" value="Tümü"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-gray-600 text-sm font-semibold transition-all">
+<span class="truncate">Favoriler</span>
+<input class="invisible w-0" name="filter-toggle" type="radio" value="Favoriler"/>
+</label>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto pb-20">
+<!-- Article Card 1 -->
+<div class="p-4 border-b border-gray-100 bg-white mb-2">
+<div class="flex items-start justify-between gap-4">
+<div class="flex flex-[2_2_0px] flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold uppercase tracking-wider text-primary">Teknoloji</span>
+<span class="text-[10px] text-gray-400">• 2 sa önce</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-background-dark text-base font-bold leading-tight">Yapay Zeka Destekli Yeni Nesil Akıllı Şehirler</p>
+<p class="text-gray-500 text-sm font-normal line-clamp-2">Geleceğin şehir yapısında veri analitiği ve otonom sistemlerin rolü her geçen gün artıyor...</p>
+</div>
+<div class="flex items-center gap-3 mt-2">
+<button class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 text-red-600 text-xs font-semibold border border-gray-100">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span>Kaydı Sil</span>
+</button>
+<button class="text-gray-400">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</div>
+<div class="w-28 h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0" data-alt="Modern futuristic city skyline with digital data overlays and blue glowing lights at night" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvdLzxdFwgCSiikYlwywZdQSq9AaJeMMok6xlMQLFyPVfro-8iNPWAo113ulwgwlS7rlmrT7ewsS16k5sOCyoH7ANvXxs2Ih-P9ZDI5DfNk0mrUfkEkwfFMT5GYw3cfwIWcuOCLKubX99Hzl6C3SsaUS_7ZH1RxubqZOi4FHhPHwna4ZRlNRlu8hekMxaKP13qxEp2U-WQ3YnjbXYKEejMX_bDf2n2lBhVZTEkwtWXZypveMI60fiRVs_f7owbg3pAhxDUgkztLg8");'></div>
+</div>
+</div>
+<!-- Article Card 2 -->
+<div class="p-4 border-b border-gray-100 bg-white mb-2">
+<div class="flex items-start justify-between gap-4">
+<div class="flex flex-[2_2_0px] flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold uppercase tracking-wider text-primary">Ekonomi</span>
+<span class="text-[10px] text-gray-400">• 5 sa önce</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-background-dark text-base font-bold leading-tight">Küresel Piyasalarda Faiz Kararları Sonrası Hareketlilik</p>
+<p class="text-gray-500 text-sm font-normal line-clamp-2">Merkez bankalarının aldığı kararların ardından borsa ve döviz kurlarında yeni bir dönem başlıyor.</p>
+</div>
+<div class="flex items-center gap-3 mt-2">
+<button class="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 text-red-600 text-xs font-semibold border border-gray-100">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span>Kaydı Sil</span>
+</button>
+<button class="text-gray-400">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</div>
+<div class="w-28 h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0" data-alt="Financial stock market data charts on a screen with blurred office building reflections in the background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1Sn19ADcXF_JtEXsbXTvywZHMdECKUKNiHIV6Vjtmk-77sPqrIx9kYlLgsTp0d966t1wvFTKhHHRdUR-OBjq3UmmZTpRfJ6Lp3O-mJQhIAKaGZkO7T7K8Tth31tSm9BsLmwIx0yUxJvM8XWLOYxWwv2FD7ZEQzLQfNiIJMKZlo3ioj06w8ty15TdAPKNfrBxEuCcXrUuNQ53x4_-8mALEDBxR2ZIi3mLnR4TMsrpKW4xTRvKsljCzOJfWhjY3Ydgeo_Z5uDQxHZ8");'></div>
+</div>
+</div>
+<!-- Empty State (Hidden by default, shown if list is empty) -->
+<div class="hidden flex flex-col items-center justify-center p-12 text-center">
+<div class="mb-6 w-48 h-48 flex items-center justify-center rounded-full bg-orange-50">
+<span class="material-symbols-outlined text-primary text-[80px]" style="font-variation-settings: 'wght' 200;">folder_open</span>
+</div>
+<h3 class="text-xl font-bold text-background-dark mb-2">Henüz kaydedilmiş haber yok</h3>
+<p class="text-gray-500 text-sm mb-8 max-w-[240px]">Daha sonra okumak istediğiniz haberleri buraya kaydedebilirsiniz.</p>
+<button class="bg-primary text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-orange-200">
+                    Haberleri Keşfet
+                </button>
+</div>
+</div>
+<!-- Shared Component: BottomNavBar -->
+<div class="fixed bottom-0 left-0 right-0 z-50">
+<div class="flex gap-2 border-t border-gray-200 bg-white px-4 pb-6 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Anasayfa</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Keşfet</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="BookmarkSimple" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Kaydedilenler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

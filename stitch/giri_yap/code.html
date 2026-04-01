@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light min-h-screen flex flex-col items-center justify-center p-4">
+<div class="w-full max-w-md flex flex-col items-center">
+<!-- Brand Header -->
+<div class="mb-8 text-center">
+<h1 class="text-primary text-3xl font-bold tracking-tight">Gündemio</h1>
+</div>
+<!-- Auth Card -->
+<div class="bg-white w-full rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="p-8">
+<div class="text-center mb-8">
+<h2 class="text-gray-900 text-2xl font-bold leading-tight">Hesabınla devam et</h2>
+<p class="text-gray-500 text-base font-normal mt-2">Favorilerini senkronize et ve tercihlerini kaydet.</p>
+</div>
+<form class="space-y-4" onsubmit="return false;">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="text-gray-700 text-sm font-medium">E-posta</label>
+<div class="relative">
+<input class="w-full rounded-xl border-gray-200 bg-gray-50 text-gray-900 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 transition-all placeholder:text-gray-400" placeholder="e-posta@örnek.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="text-gray-700 text-sm font-medium">Şifre</label>
+<a class="text-primary text-xs font-semibold hover:underline" href="#">Şifremi unuttum</a>
+</div>
+<div class="relative flex items-stretch">
+<input class="w-full rounded-xl rounded-r-none border border-r-0 border-gray-200 bg-gray-50 text-gray-900 focus:border-primary focus:ring-0 h-12 px-4 transition-all placeholder:text-gray-400" placeholder="••••••••" type="password"/>
+<button class="flex items-center justify-center px-4 rounded-r-xl border border-l-0 border-gray-200 bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-4 space-y-3">
+<button class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-[0.98]">
+                            Giriş Yap
+                        </button>
+<button class="w-full bg-white border-2 border-primary text-primary hover:bg-primary/5 font-bold py-3 px-6 rounded-xl transition-all">
+                            Kayıt Ol
+                        </button>
+</div>
+</form>
+<!-- Divider -->
+<div class="flex items-center my-8">
+<div class="flex-grow border-t border-gray-100"></div>
+<span class="px-4 text-gray-400 text-sm">veya</span>
+<div class="flex-grow border-t border-gray-100"></div>
+</div>
+<!-- Guest Access -->
+<div class="text-center">
+<button class="text-gray-500 hover:text-gray-800 text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors group">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">person_outline</span>
+                        Misafir olarak devam et
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer Decoration -->
+<div class="mt-8 flex gap-4 text-gray-400 text-xs">
+<a class="hover:text-primary transition-colors" href="#">Gizlilik Politikası</a>
+<span>•</span>
+<a class="hover:text-primary transition-colors" href="#">Kullanım Koşulları</a>
+</div>
+</div>
+<!-- Background Decoration Image -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 opacity-5 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="abstract flowing orange and white shapes with soft mesh gradients and subtle grainy texture for background depth" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvGshexiDee3SWPWMqFZum7fNbbfQw5JnRpdRE051bY8TEVpAicrLt7p9v7PRs_qaAGyTukEUCU6KikO1j-o6DLHxcdxcqSI74Tld1IL6RdXiKVVmHSmxW-XkjaQqun37tZCMMeT3YWtOuZiiPWuhLZwYEE8ETqh_tc8blUc7OlxkAJZ0tTti1HrTRKouAABUeEzgp005IKcA8g4Kp8u3o3y0F1cCW5ADgCzRHr1SbC8Iy1Wb38uzzeVqJOnyNskTSLsUZxVr6r5s"/>
+</div>
+</body></html>

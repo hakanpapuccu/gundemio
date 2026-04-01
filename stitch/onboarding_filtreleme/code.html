@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"],
+                        "sans": ["Public Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-sans antialiased text-background-dark">
+<!-- Focused View: Onboarding Process -->
+<div class="relative flex min-h-screen w-full flex-col bg-background-light overflow-x-hidden">
+<!-- Minimal Header for Focused Views -->
+<header class="flex items-center justify-between p-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button class="text-sm font-semibold text-primary">Atla</button>
+</header>
+<!-- Illustration / Visual Area -->
+<div class="flex-1 flex flex-col items-center justify-center px-6">
+<div class="relative w-full max-w-sm aspect-square mb-8 flex items-center justify-center">
+<!-- Decorative background elements -->
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl"></div>
+<!-- Floating Illustration Mockup using Design System Tokens -->
+<div class="relative z-10 w-full h-full flex flex-wrap items-center justify-center gap-4">
+<div class="animate-bounce" style="animation-duration: 3s;">
+<div class="flex items-center gap-2 px-6 py-3 rounded-full bg-white shadow-xl border border-gray-100">
+<span class="material-symbols-outlined text-primary" data-weight="fill">devices</span>
+<span class="font-bold text-lg">Teknoloji</span>
+</div>
+</div>
+<div class="animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;">
+<div class="flex items-center gap-2 px-6 py-3 rounded-full bg-white shadow-xl border border-gray-100">
+<span class="material-symbols-outlined text-primary" data-weight="fill">trending_up</span>
+<span class="font-bold text-lg">Ekonomi</span>
+</div>
+</div>
+<div class="animate-bounce" style="animation-duration: 3.5s; animation-delay: 0.2s;">
+<div class="flex items-center gap-2 px-6 py-3 rounded-full bg-white shadow-xl border border-gray-100">
+<span class="material-symbols-outlined text-primary" data-weight="fill">sports_soccer</span>
+<span class="font-bold text-lg">Spor</span>
+</div>
+</div>
+<div class="animate-bounce" style="animation-duration: 4.5s; animation-delay: 0.8s;">
+<div class="flex items-center gap-2 px-6 py-3 rounded-full bg-white shadow-xl border border-gray-100">
+<span class="material-symbols-outlined text-primary" data-weight="fill">public</span>
+<span class="font-bold text-lg">Dünya</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="text-center space-y-4 max-w-xs mx-auto">
+<h1 class="text-display text-3xl font-bold leading-tight tracking-tight text-background-dark">
+                    İlgi alanına göre filtrele
+                </h1>
+<p class="text-base text-gray-600 leading-relaxed">
+                    Sadece sizin için önemli olan konuları takip edin.
+                </p>
+</div>
+</div>
+<!-- Footer Actions -->
+<footer class="p-8 space-y-8">
+<!-- Progress Indicator (2/3 Active) -->
+<div class="flex w-full flex-row items-center justify-center gap-3">
+<div class="h-2 w-2 rounded-full bg-gray-300"></div>
+<div class="h-2.5 w-8 rounded-full bg-primary"></div>
+<div class="h-2 w-2 rounded-full bg-gray-300"></div>
+</div>
+<!-- Navigation Button -->
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
+                    Sonraki
+                </button>
+</div>
+</footer>
+</div>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 -z-10 p-20 opacity-20">
+<div class="w-64 h-64 bg-primary rounded-full blur-[120px]"></div>
+</div>
+</body></html>

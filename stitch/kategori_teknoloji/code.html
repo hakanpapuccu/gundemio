@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ec5b13",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221610",
+          },
+          fontFamily: {
+            "display": ["Public Sans", "sans-serif"],
+            "sans": ["Public Sans", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-sans text-gray-900">
+<div class="relative flex min-h-screen w-full flex-col bg-background-light overflow-x-hidden max-w-md mx-auto shadow-2xl">
+<!-- Top App Bar (Shared Component Logic Inspired) -->
+<header class="sticky top-0 z-10 flex items-center bg-white border-b border-gray-100 p-4 justify-between">
+<div class="text-gray-900 flex size-10 shrink-0 items-center justify-center cursor-pointer" data-icon="ArrowLeft" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">arrow_left</span>
+</div>
+<h2 class="text-gray-900 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Teknoloji</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex cursor-pointer items-center justify-center rounded-xl size-10 bg-transparent text-gray-900">
+<div data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">magnification_large</span>
+</div>
+</button>
+</div>
+</header>
+<!-- Filters/Sort Row -->
+<div class="flex gap-3 p-4 overflow-x-auto no-scrollbar bg-white">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-4 border border-gray-200">
+<p class="text-gray-700 text-sm font-medium">En Yeni</p>
+<div class="text-gray-500" data-icon="CaretDown" data-size="20px" data-weight="regular">
+<span class="material-symbols-outlined" style="font-size: 18px;">expand_more</span>
+</div>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-4 border border-gray-200">
+<p class="text-gray-700 text-sm font-medium">En Popüler</p>
+<div class="text-gray-500" data-icon="CaretDown" data-size="20px" data-weight="regular">
+<span class="material-symbols-outlined" style="font-size: 18px;">expand_more</span>
+</div>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-100 px-4 border border-gray-200">
+<p class="text-gray-700 text-sm font-medium">Kaynağa Göre</p>
+<div class="text-gray-500" data-icon="CaretDown" data-size="20px" data-weight="regular">
+<span class="material-symbols-outlined" style="font-size: 18px;">expand_more</span>
+</div>
+</button>
+</div>
+<!-- Main Content: News List -->
+<main class="flex-1 flex flex-col gap-1 p-2">
+<!-- News Card 1 -->
+<div class="flex items-start gap-4 bg-white p-3 rounded-xl shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shrink-0" data-alt="Close-up high-tech computer processor chip on a motherboard with glowing blue neon circuitry lights in a dark laboratory setting." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCxm0u-fb1Ue5zrWsE6uZd0Ee7y7ScToK28TXrGOYUN8Ky_Swi0p8Ly9mYe3tA_QdyWm7XWi20iCVRNFbZO_gQsS4nHvtWBJnq4aONAleIAV9jKIscugQb6W4o9Yt7aGuf3uemdpHB74AutqgkUpA3c_Yp33u4fzaoLF1NfOqYnVIx_fZWnYmapY15hDkiP_lhBTrTIZL3Y5xImgC82XEhWZZXzLv-WxqrU3MFIDRIZRwejb1WP9xwncgihHTLFAGMLjBa-4lEpR_k");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1 min-h-[96px]">
+<div>
+<p class="text-gray-900 text-base font-bold leading-snug line-clamp-2">Yeni Nesil İşlemciler Tanıtıldı: Performans Sınırları Zorlanıyor</p>
+<p class="text-gray-500 text-xs font-normal mt-2">Chip Online • 2 saat önce</p>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-primary cursor-pointer" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+</div>
+</div>
+</div>
+<!-- News Card 2 -->
+<div class="flex items-start gap-4 bg-white p-3 rounded-xl shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shrink-0" data-alt="Digital representation of artificial intelligence neural networks with glowing nodes and connections on a deep blue geometric background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDOxDf4sGdGxKZibkAMPJ4KGIZ1p8I_X4hEQd1u6edsmmNjfpYE2trSdVEQuiwzEQakRE7FEa-XO-xW_-8lPs3uXbK170sQTOu7sJsWSlNpchSv0TXVu68Qidh7U9a3-oiC0iJzsrt021mO8RX99miWWv0emwsF1oQUdEAcuRMI3bYu50-1llgy6G6yXlO8VzdG2nDVDTEV6PA5XSg2krp-YUCbIFjtTNcX4FGNXhh5dSj7kvLVAQ7bxapx_q07EjWa4A5SIOZ0Wi0");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1 min-h-[96px]">
+<div>
+<p class="text-gray-900 text-base font-bold leading-snug line-clamp-2">Yapay Zeka Alanında Devrimsel Gelişme: Kendi Kodunu Yazan Sistemler</p>
+<p class="text-gray-500 text-xs font-normal mt-2">Teknoloji Haber • 5 saat önce</p>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-gray-400 cursor-pointer" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+</div>
+</div>
+</div>
+<!-- News Card 3 -->
+<div class="flex items-start gap-4 bg-white p-3 rounded-xl shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shrink-0" data-alt="Sleek modern workspace with high-end laptops, curved monitors, and minimalist tech accessories on a clean white desk in natural daylight." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGUZ1vbdUkqLmR65VziOcjrw-Qb5uqgy9hv9oMkOQQ8pjxwjg9T6qxaLyVkbQCof74Vaoef8_j54IV-1mQMw0sbqZt8b8xjNhoxJqNh75u_zVD4FNlCaW3rtZAbJuVtxkX5Vx-1BpN5PTjtCBjRw2xPajgsrfT-rFCZMjUpImgk0Q_lMfck8ogv8CBsji-vBfFS2q8QP-TGAM8kJLs7duNvpkBOSXTrlQTUmlaYx6ql2RWXMeIjGoFzf1rRGiq2C3ZAxY4L-f0VK0");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1 min-h-[96px]">
+<div>
+<p class="text-gray-900 text-base font-bold leading-snug line-clamp-2">Web3 ve Geleceğin İnterneti: Neler Değişiyor?</p>
+<p class="text-gray-500 text-xs font-normal mt-2">Gündem Tekno • 8 saat önce</p>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-gray-400 cursor-pointer" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+</div>
+</div>
+</div>
+<!-- News Card 4 -->
+<div class="flex items-start gap-4 bg-white p-3 rounded-xl shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shrink-0" data-alt="Close up of a futuristic high-speed gaming router with glowing red LED lights and multiple antennas in a dark room." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBdgYsyQG1ITeuSH_ToJJ8Bgms67dqNaaex476VrbYr6rnyv7ERQN9ON0XfXlOlALfHkN5cGH2c8lp7m_-K8ONP3c8nrw3xBBfKwr7u-nS1WAM6rUVAFB1cq4VFpZdse8v9aABOddm9T2Xjr8IUHGmaBuWmmCrQVkI1o7oTUnx7Ez4YFWWH7itLgNLLWFmvOze3rYLmQxSfbJP87ql0xyjU98SFX0MP_u3licT9cz3mZi_cebtmZAc7hZUHe2-heoTFhnZQ56HyDi0");'>
+</div>
+<div class="flex flex-col flex-1 justify-between py-1 min-h-[96px]">
+<div>
+<p class="text-gray-900 text-base font-bold leading-snug line-clamp-2">6G Teknolojisi İçin İlk Sinyaller Alındı</p>
+<p class="text-gray-500 text-xs font-normal mt-2">Bilim ve Teknik • 12 saat önce</p>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-gray-400 cursor-pointer" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Shared Bottom Nav -->
+<nav class="sticky bottom-0 z-20 flex gap-2 border-t border-gray-200 bg-white px-4 pb-6 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">house</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Gündem</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="MagnifyingGlass" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">magnification_large</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Keşfet</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="Bookmark" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">bookmark</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Kaydedilenler</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</nav>
+</div>
+</body></html>

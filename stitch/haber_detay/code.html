@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gündemio - Yapay Zekada Yeni Dönem</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f6f6;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-slate-900">
+<!-- Header / Back Button (Process Screen Logic) -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-white/80 px-4 py-3 backdrop-blur-md border-b border-slate-100">
+<button class="flex items-center gap-2 text-slate-700">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="font-medium text-sm text-primary">Gündemio</span>
+</button>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-600">more_horiz</span>
+</div>
+</header>
+<main class="mx-auto max-w-2xl bg-white shadow-sm min-h-screen">
+<!-- Shared Component: HeaderImage Modified for Light Theme Consistency -->
+<div class="relative flex h-auto w-full flex-col bg-white group/design-root overflow-x-hidden">
+<div class="@container">
+<div class="@[480px]:px-4 @[480px]:py-3">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-slate-200 @[480px]:rounded-xl min-h-80" data-alt="Futuristic glowing neural network nodes and artificial intelligence processor lines on a dark sleek background with orange highlights" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjZWGKQNk6bAzAl1UTGifYetkJk_1dKIt6nTgtdkXVSak9Zk7qo3r8WPYWgT40hp0m9tG0gDnjvsDNkjY_tOEkse46cbmm32MRA93vtK0evONn7AiaPKpCvZJOv_sNy9gAtjNvHErq65RXA2y4yQv96RdQgamEKLAOVUYhkRnbZieSexn0Je2SSCpCyYdztxT4YcoXhx_3rNoWGlCH3kyLK6RsvjEoa_tJipALGh6ma9DPg4nCXZ3adlIwCgY2nxV3d5doqVoyyDk");'>
+</div>
+</div>
+</div>
+<div class="flex gap-3 p-4 flex-wrap">
+<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-primary/10 px-4">
+<p class="text-primary text-sm font-bold leading-normal uppercase tracking-wider">Teknoloji</p>
+</div>
+</div>
+<h1 class="text-slate-900 tracking-tight text-[32px] font-extrabold leading-tight px-4 text-left pb-3 pt-2">
+                Yapay Zekada Yeni Dönem: GPT-5 Geliyor mu?
+            </h1>
+<div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 border border-slate-100" data-alt="Professional tech media company logo with abstract geometric shapes in vibrant orange and blue" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGmzUrBkGZNGB9jD12sm70kPTWrI0FEKzCGgqhZwx1y2O5BoEyB6PbZvtO5KDjnaJNoKB-yAkXvhxs89MSXouzkperCHVQy-k6Wk6IPAVh8tUp9izf-tohwzyQu8LIxR8hWBhvuiQ4jXZwWy9nX2apYt7tmv2r2uI9moigDLLiANId9uCO9OK52oPuhaF1_ZWg64yMvPayMH8p_v75Ol-Dncw4S3l3_PM-NAHT-88HOZpPbXr5aG2kxX6GP_UR3EbBz9wYGkS-pN8");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 text-base font-bold leading-none mb-1">TechNews</p>
+<p class="text-slate-500 text-sm font-normal leading-normal">3 dk okuma süresi</p>
+</div>
+</div>
+<div class="shrink-0">
+<p class="text-slate-400 text-sm font-medium">2 saat önce</p>
+</div>
+</div>
+<!-- Actions Row -->
+<div class="@container border-y border-slate-50 mt-4">
+<div class="px-4 flex justify-between items-center py-2">
+<div class="flex gap-1">
+<div class="flex flex-col items-center gap-1 py-2 text-center w-16">
+<div class="rounded-full bg-slate-100 p-2.5 text-slate-700">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</div>
+<p class="text-slate-600 text-[10px] font-bold uppercase">Kaydet</p>
+</div>
+<div class="flex flex-col items-center gap-1 py-2 text-center w-16">
+<div class="rounded-full bg-slate-100 p-2.5 text-slate-700">
+<span class="material-symbols-outlined">share</span>
+</div>
+<p class="text-slate-600 text-[10px] font-bold uppercase">Paylaş</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 rounded-full px-4 py-2 border border-slate-100">
+<span class="text-xs font-bold text-slate-400">A</span>
+<div class="w-16 h-1 bg-slate-200 rounded-full relative">
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-sm"></div>
+</div>
+<span class="text-lg font-bold text-slate-800">A</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Article Content -->
+<article class="px-4 py-8">
+<p class="text-slate-900 text-lg font-bold leading-relaxed mb-6">
+                OpenAI'nın merakla beklenen yeni dil modeli GPT-5 hakkında sızıntılar artmaya başladı. Teknoloji dünyasını heyecanlandıran bu gelişme, yapay zekanın insan seviyesine (AGI) bir adım daha yaklaşacağı iddialarını güçlendiriyor.
+            </p>
+<div class="space-y-6 text-slate-700 text-lg leading-loose font-normal">
+<p>
+                    Yapay zeka dünyasının öncüsü OpenAI, yeni amiral gemisi modeli üzerinde çalışmalarını hızlandırdı. Henüz resmi bir çıkış tarihi verilmemiş olsa da, şirkete yakın kaynaklar GPT-5'in "muazzam bir sıçrama" olacağını belirtiyor. Özellikle akıl yürütme ve problem çözme yeteneklerindeki gelişim, mevcut modellerin çok ötesinde konumlanacak.
+                </p>
+<h2 class="text-2xl font-bold text-slate-900 mt-10 mb-4">Neler Yeni Olacak?</h2>
+<p>
+                    Sızdırılan bilgilere göre GPT-5, sadece metin tabanlı değil, tamamen multimodal bir yapıya sahip olacak. Bu, sistemin video, ses ve karmaşık görselleri eş zamanlı olarak çok daha derinlemesine analiz edebileceği anlamına geliyor. Ayrıca, "halüsinasyon" olarak adlandırılan hatalı bilgi üretme sorununun yeni modelde minimuma indirilmesi hedefleniyor.
+                </p>
+<blockquote class="border-l-4 border-primary pl-6 my-8 italic text-slate-800 text-xl font-medium">
+                    "GPT-5 sadece bir güncelleme değil, makinelerin dünyayı anlama biçiminde köklü bir paradigma değişimi olacak."
+                </blockquote>
+<p>
+                    Geliştirme sürecinde güvenlik testlerine (Red Teaming) her zamankinden daha fazla vakit ayrıldığı bildiriliyor. OpenAI CEO'su Sam Altman, geçtiğimiz günlerde katıldığı bir konferansta "Beklediğinize değecek bir model geliyor" diyerek beklentileri en üst seviyeye taşıdı.
+                </p>
+</div>
+<!-- CTA Button -->
+<div class="mt-12 mb-16">
+<button class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span>Orijinal Kaynağa Git</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</article>
+<!-- Related Content -->
+<section class="bg-slate-50 px-4 py-10 border-t border-slate-100">
+<h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+<span class="w-2 h-6 bg-primary rounded-full"></span>
+                İlgili Haberler
+            </h3>
+<div class="grid grid-cols-1 gap-4">
+<!-- Related Card 1 -->
+<div class="flex bg-white p-3 rounded-xl gap-4 border border-slate-200">
+<div class="w-24 h-24 rounded-lg bg-cover bg-center shrink-0" data-alt="Cybersecurity lock icon on a digital circuit board background with soft blue lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgGvkaeR9D7WC9iSB9siYzu3qT6jq5KQ0pySJ6zaGhQ3DHZRYeRKEWnrAe_kvaM1FHWyUSzLN5Lv8NYcsp6D38Aus18DembKa56esk2Rm2C_gqugm-7fTseUJW5_O_wE_YjSeJhYa2vJDRvvkGQOnyCZz9J7_ka3S9GYWRk4WqTuOPm8WAGRF6aOo5qszAK8ETYr_uy5Xn_psASIL3YS7zRbwl9kA5VJHiOzij2m8B2aSFhwa--CoRv0nXhrwkHorPAJuZSHlGlJU');"></div>
+<div class="flex flex-col justify-between py-1">
+<span class="text-[10px] font-extrabold text-primary uppercase">Siber Güvenlik</span>
+<h4 class="text-sm font-bold text-slate-800 line-clamp-2">Yeni Nesil Şifreleme Yöntemleri ve AI Tehdidi</h4>
+<p class="text-xs text-slate-400">4 saat önce</p>
+</div>
+</div>
+<!-- Related Card 2 -->
+<div class="flex bg-white p-3 rounded-xl gap-4 border border-slate-200">
+<div class="w-24 h-24 rounded-lg bg-cover bg-center shrink-0" data-alt="Close up of a semiconductor microchip with intricate pathways and orange light reflections" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQ95ge0IXk4FpagiClwza4UiORDfFQoBB2dghpug7dC7rDhMI93NVJmlgdQxNe_DSl7PYmzOqNGGXaV4hKHbY7MzJeF9aqNa0OgiqT94U07cAHFUIa4uf-2WSqTXJ3kDNxrGVQl6-em0I1PFFEkwXUarAgxh2AZLv6nfCeKSY4Lz09Gx_PN0PowEWRzusH4bRnZjbjSYv645sVP77L61fRfCcMFIgPTx8Ms0gOSiIhZ4L3iGTV1gaarqFDCNQ5-F6J09dNdcZB5Bc');"></div>
+<div class="flex flex-col justify-between py-1">
+<span class="text-[10px] font-extrabold text-primary uppercase">Donanım</span>
+<h4 class="text-sm font-bold text-slate-800 line-clamp-2">Kuantum İşlemcilerde Devrim: Google'ın Yeni Duyurusu</h4>
+<p class="text-xs text-slate-400">Dün</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="p-8 text-center bg-slate-50 border-t border-slate-100">
+<p class="text-slate-400 text-xs font-medium">© 2024 Gündemio Medya. Tüm hakları saklıdır.</p>
+</footer>
+</main>
+</body></html>
