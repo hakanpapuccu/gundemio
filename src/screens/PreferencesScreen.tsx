@@ -1,29 +1,55 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { usePreferencesStore } from '../store/usePreferencesStore';
 import { appTheme } from '../theme';
-import { Button, Chip, ScreenContainer, SectionHeader, SourceCard } from '../components/ui';
-
-const categoryItems = [
-  { id: 'gundem', label: 'Gündem' },
-  { id: 'teknoloji', label: 'Teknoloji' },
-  { id: 'ekonomi', label: 'Ekonomi' },
-  { id: 'spor', label: 'Spor' },
-  { id: 'dunya', label: 'Dünya' },
-];
-
-const sourceItems = [
-  { id: 'cnn-turk', name: 'CNN Türk', description: 'Gündem • 1.2M Takipçi' },
-  { id: 'webrazzi', name: 'Webrazzi', description: 'Teknoloji • 450K Takipçi' },
-  { id: 'bloomberg-ht', name: 'Bloomberg HT', description: 'Ekonomi • 320K Takipçi' },
-];
+import { Button, Chip, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton } from '../components/ui';
+import { DEMO_USER_ID } from '../constants/session';
+import { useCategoriesQuery, useSourcesQuery, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
 
 export function PreferencesScreen() {
-  const selectedCategoryIds = usePreferencesStore((state) => state.selectedCategoryIds);
-  const selectedSourceIds = usePreferencesStore((state) => state.selectedSourceIds);
-  const toggleCategory = usePreferencesStore((state) => state.toggleCategory);
-  const toggleSource = usePreferencesStore((state) => state.toggleSource);
-  const reset = usePreferencesStore((state) => state.reset);
+  const categoriesQuery = useCategoriesQuery();
+  const sourcesQuery = useSourcesQuery({ page: 1, limit: 20 });
+  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
+  const upsertPreferencesMutation = useUpsertPreferencesMutation();
+
+  const selectedCategoryIds = userPreferencesQuery.data?.categoryIds ?? [];
+  const selectedSourceIds = userPreferencesQuery.data?.sourceIds ?? [];
+
+  const commitPreferences = (params: { categoryIds: string[]; sourceIds: string[] }) => {
+    upsertPreferencesMutation.mutate({
+      userId: DEMO_USER_ID,
+      categoryIds: params.categoryIds,
+      sourceIds: params.sourceIds,
+    });
+  };
+
+  const toggleCategory = (categoryId: string) => {
+    const nextCategoryIds = selectedCategoryIds.includes(categoryId)
+      ? selectedCategoryIds.filter((id) => id !== categoryId)
+      : [...selectedCategoryIds, categoryId];
+
+    commitPreferences({
+      categoryIds: nextCategoryIds,
+      sourceIds: selectedSourceIds,
+    });
+  };
+
+  const toggleSource = (sourceId: string) => {
+    const nextSourceIds = selectedSourceIds.includes(sourceId)
+      ? selectedSourceIds.filter((id) => id !== sourceId)
+      : [...selectedSourceIds, sourceId];
+
+    commitPreferences({
+      categoryIds: selectedCategoryIds,
+      sourceIds: nextSourceIds,
+    });
+  };
+
+  const reset = () => {
+    commitPreferences({
+      categoryIds: [],
+      sourceIds: [],
+    });
+  };
 
   return (
     <ScreenContainer scrollable>
@@ -34,10 +60,10 @@ export function PreferencesScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          {categoryItems.map((category) => (
+          {(categoriesQuery.data ?? []).map((category) => (
             <Chip
               key={category.id}
-              label={category.label}
+              label={category.name}
               onPress={() => toggleCategory(category.id)}
               selected={selectedCategoryIds.includes(category.id)}
             />
@@ -48,15 +74,24 @@ export function PreferencesScreen() {
       <View style={styles.section}>
         <SectionHeader title="Kaynak Tercihleri" />
         <View style={styles.sourceList}>
-          {sourceItems.map((source) => (
-            <SourceCard
-              key={source.id}
-              description={source.description}
-              isFollowing={selectedSourceIds.includes(source.id)}
-              name={source.name}
-              onToggleFollow={() => toggleSource(source.id)}
-            />
-          ))}
+          {sourcesQuery.isLoading ? (
+            <>
+              <SourceCardSkeleton />
+              <SourceCardSkeleton />
+              <SourceCardSkeleton />
+            </>
+          ) : (
+            (sourcesQuery.data?.items ?? []).map((source) => (
+              <SourceCard
+                key={source.id}
+                description={source.description ?? 'Haber kaynağı'}
+                imageUrl={source.logoUrl}
+                isFollowing={selectedSourceIds.includes(source.id)}
+                name={source.name}
+                onToggleFollow={() => toggleSource(source.id)}
+              />
+            ))
+          )}
         </View>
       </View>
 

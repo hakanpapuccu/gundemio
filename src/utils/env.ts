@@ -1,4 +1,5 @@
 export const env = {
   supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL?.trim() ?? '',
   supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? '',
+  demoUserId: process.env.EXPO_PUBLIC_DEMO_USER_ID?.trim() ?? 'guest-user',
 } as const;

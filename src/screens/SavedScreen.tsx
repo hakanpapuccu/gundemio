@@ -3,11 +3,31 @@ import { StyleSheet, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { ArticleCard, Chip, EmptyState, ScreenContainer, SectionHeader, TopAppBar } from '../components/ui';
+import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, SectionHeader, TopAppBar } from '../components/ui';
+import { useArticlesQuery, useToggleFavoriteMutation } from '../hooks/queries';
+import { DEMO_USER_ID } from '../constants/session';
+import { formatTimeAgoTr } from '../utils/date';
 
 export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'favorites'>('all');
-  const hasSavedArticles = true;
+  const articlesQuery = useArticlesQuery({
+    page: 1,
+    limit: 20,
+    userId: DEMO_USER_ID,
+  });
+  const toggleFavoriteMutation = useToggleFavoriteMutation();
+
+  const savedArticles = (articlesQuery.data?.items ?? []).filter((article) => article.isFavorite);
+  const displayedArticles = activeFilter === 'favorites' ? savedArticles : savedArticles;
+  const hasSavedArticles = displayedArticles.length > 0;
+
+  const handleToggleFavorite = (articleId: string, isFavorite: boolean) => {
+    toggleFavoriteMutation.mutate({
+      userId: DEMO_USER_ID,
+      articleId,
+      isFavorite: !isFavorite,
+    });
+  };
 
   return (
     <ScreenContainer scrollable>
@@ -22,35 +42,33 @@ export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
         />
       </View>
 
-      {hasSavedArticles ? (
+      {articlesQuery.isLoading ? (
+        <View style={styles.list}>
+          <SectionHeader title="Kaydedilen Haberler" />
+          <ArticleCardSkeleton />
+          <ArticleCardSkeleton />
+        </View>
+      ) : hasSavedArticles ? (
         <View style={styles.list}>
           <SectionHeader title={activeFilter === 'all' ? 'Kaydedilen Haberler' : 'Favori Haberler'} />
-          <ArticleCard
-            bookmarked
-            onPress={() =>
-              navigation.navigate('ArticleDetail', {
-                articleId: 'saved-1',
-                title: 'Yapay Zeka Destekli Yeni Nesil Akıllı Şehirler',
-              })
-            }
-            publishedLabel="2 saat önce"
-            source="Teknoloji Haber"
-            summary="Geleceğin şehir yapısında veri analitiği ve otonom sistemlerin rolü her geçen gün artıyor."
-            title="Yapay Zeka Destekli Yeni Nesil Akıllı Şehirler"
-          />
-          <ArticleCard
-            bookmarked
-            onPress={() =>
-              navigation.navigate('ArticleDetail', {
-                articleId: 'saved-2',
-                title: 'Küresel Piyasalarda Faiz Kararları Sonrası Hareketlilik',
-              })
-            }
-            publishedLabel="5 saat önce"
-            source="Ekonomi Gündemi"
-            summary="Merkez bankalarının kararları sonrası borsa ve döviz kurlarında yeni bir dönem başladı."
-            title="Küresel Piyasalarda Faiz Kararları Sonrası Hareketlilik"
-          />
+          {displayedArticles.map((article) => (
+            <ArticleCard
+              key={article.id}
+              bookmarked={article.isFavorite}
+              imageUrl={article.imageUrl}
+              onPress={() =>
+                navigation.navigate('ArticleDetail', {
+                  articleId: article.id,
+                  title: article.title,
+                })
+              }
+              onPressBookmark={() => handleToggleFavorite(article.id, article.isFavorite)}
+              publishedLabel={formatTimeAgoTr(article.publishedAt)}
+              source={article.sourceName}
+              summary={article.summary ?? undefined}
+              title={article.title}
+            />
+          ))}
         </View>
       ) : (
         <EmptyState

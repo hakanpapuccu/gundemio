@@ -19,3 +19,7 @@ export const supabase = hasSupabaseConfig
       },
     })
   : null;
+
+export function getSupabaseClient() {
+  return supabase;
+}

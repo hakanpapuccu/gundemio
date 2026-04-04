@@ -1,11 +1,7 @@
-import type { Article } from '../../types/article';
-import { supabase } from '../supabase/client';
+import type { Article } from '../../domain/models/news';
+import { listArticles } from '../news/articleService';
 
 export async function fetchArticles(): Promise<Article[]> {
-  if (!supabase) {
-    return [];
-  }
-
-  // Placeholder: actual query will be implemented once DB schema is finalized.
-  return [];
+  const result = await listArticles();
+  return result.items;
 }

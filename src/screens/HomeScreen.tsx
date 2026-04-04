@@ -1,14 +1,75 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { ArticleCard, Chip, ScreenContainer, SectionHeader, SourceCard, TopAppBar } from '../components/ui';
-
-const categories = ['Tümü', 'Gündem', 'Teknoloji', 'Ekonomi', 'Spor', 'Dünya'] as const;
+import { ArticleCard, ArticleCardSkeleton, Chip, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton, TopAppBar } from '../components/ui';
+import {
+  useArticlesQuery,
+  useCategoriesQuery,
+  useSourcesQuery,
+  useToggleFavoriteMutation,
+  useUpsertPreferencesMutation,
+  useUserPreferencesQuery,
+} from '../hooks/queries';
+import { DEMO_USER_ID } from '../constants/session';
+import { formatTimeAgoTr } from '../utils/date';
 
 export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
-  const [selectedCategory, setSelectedCategory] = useState<(typeof categories)[number]>('Tümü');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
+
+  const categoriesQuery = useCategoriesQuery();
+  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
+  const toggleFavoriteMutation = useToggleFavoriteMutation();
+  const upsertPreferencesMutation = useUpsertPreferencesMutation();
+
+  const categoryFilterIds = selectedCategoryId === 'all' ? undefined : [selectedCategoryId];
+  const articlesQuery = useArticlesQuery({
+    page: 1,
+    limit: 3,
+    userId: DEMO_USER_ID,
+    filters: {
+      categoryIds: categoryFilterIds,
+    },
+  });
+  const sourcesQuery = useSourcesQuery({
+    page: 1,
+    limit: 2,
+    categoryIds: categoryFilterIds,
+  });
+
+  const categoryItems = useMemo(
+    () => [{ id: 'all', name: 'Tümü' }, ...(categoriesQuery.data ?? []).map((category) => ({ id: category.id, name: category.name }))],
+    [categoriesQuery.data]
+  );
+
+  const followedSourceIds = new Set(userPreferencesQuery.data?.sourceIds ?? []);
+
+  const handleToggleFavorite = (articleId: string, isFavorite: boolean) => {
+    toggleFavoriteMutation.mutate({
+      userId: DEMO_USER_ID,
+      articleId,
+      isFavorite: !isFavorite,
+    });
+  };
+
+  const handleToggleSourceFollow = (sourceId: string) => {
+    const current = userPreferencesQuery.data ?? {
+      userId: DEMO_USER_ID,
+      categoryIds: [],
+      sourceIds: [],
+      updatedAt: new Date().toISOString(),
+    };
+
+    const exists = current.sourceIds.includes(sourceId);
+    const sourceIds = exists ? current.sourceIds.filter((id) => id !== sourceId) : [...current.sourceIds, sourceId];
+
+    upsertPreferencesMutation.mutate({
+      userId: current.userId,
+      categoryIds: current.categoryIds,
+      sourceIds,
+    });
+  };
 
   return (
     <ScreenContainer scrollable withHorizontalPadding={false}>
@@ -33,54 +94,45 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {categories.map((category) => (
+        {categoryItems.map((category) => (
           <Chip
-            key={category}
-            label={category}
-            onPress={() => setSelectedCategory(category)}
-            selected={category === selectedCategory}
+            key={category.id}
+            label={category.name}
+            onPress={() => setSelectedCategoryId(category.id)}
+            selected={category.id === selectedCategoryId}
           />
         ))}
       </ScrollView>
 
       <View style={styles.sectionContainer}>
-        <ArticleCard
-          category="Teknoloji"
-          onPress={() =>
-            navigation.navigate('ArticleDetail', {
-              articleId: 'home-featured-1',
-              title: 'Yapay Zekada Yeni Dönem',
-            })
-          }
-          publishedLabel="2 saat önce"
-          source="TechNews"
-          title="Yapay Zekada Yeni Dönem"
-          variant="featured"
-        />
-        <ArticleCard
-          onPress={() =>
-            navigation.navigate('ArticleDetail', {
-              articleId: 'home-article-2',
-              title: 'Borsa İstanbul Haftaya Yükselişle Başladı',
-            })
-          }
-          publishedLabel="1 saat önce"
-          source="Ekonomi Gündemi"
-          summary="Hisse senetleri değer kazandı, yatırımcılar yeni ekonomik verileri bekliyor."
-          title="Borsa İstanbul Haftaya Yükselişle Başladı"
-        />
-        <ArticleCard
-          onPress={() =>
-            navigation.navigate('ArticleDetail', {
-              articleId: 'home-article-3',
-              title: 'Derbi Hazırlıkları Tamamlandı',
-            })
-          }
-          publishedLabel="30 dk önce"
-          source="SporArena"
-          summary="Hafta sonu oynanacak maç öncesi takımlar son antrenmanlarını tamamladı."
-          title="Derbi Hazırlıkları Tamamlandı"
-        />
+        {articlesQuery.isLoading ? (
+          <>
+            <ArticleCardSkeleton />
+            <ArticleCardSkeleton />
+            <ArticleCardSkeleton />
+          </>
+        ) : (
+          (articlesQuery.data?.items ?? []).map((article, index) => (
+            <ArticleCard
+              key={article.id}
+              bookmarked={article.isFavorite}
+              category={article.categoryName ?? undefined}
+              imageUrl={article.imageUrl}
+              onPress={() =>
+                navigation.navigate('ArticleDetail', {
+                  articleId: article.id,
+                  title: article.title,
+                })
+              }
+              onPressBookmark={() => handleToggleFavorite(article.id, article.isFavorite)}
+              publishedLabel={formatTimeAgoTr(article.publishedAt)}
+              source={article.sourceName}
+              summary={article.summary ?? undefined}
+              title={article.title}
+              variant={index === 0 ? 'featured' : 'compact'}
+            />
+          ))
+        )}
       </View>
 
       <View style={styles.sectionContainer}>
@@ -90,27 +142,29 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
           title="Takip Edilen Kaynaklar"
         />
         <View style={styles.sourceList}>
-          <SourceCard
-            description="Gündem • 1.2M Takipçi"
-            name="CNN Türk"
-            onPress={() =>
-              navigation.navigate('SourceDetail', {
-                sourceId: 'cnn-turk',
-                sourceName: 'CNN Türk',
-              })
-            }
-          />
-          <SourceCard
-            description="Teknoloji • 450K Takipçi"
-            isFollowing
-            name="Webrazzi"
-            onPress={() =>
-              navigation.navigate('SourceDetail', {
-                sourceId: 'webrazzi',
-                sourceName: 'Webrazzi',
-              })
-            }
-          />
+          {sourcesQuery.isLoading ? (
+            <>
+              <SourceCardSkeleton />
+              <SourceCardSkeleton />
+            </>
+          ) : (
+            (sourcesQuery.data?.items ?? []).map((source) => (
+              <SourceCard
+                key={source.id}
+                description={source.description ?? 'Haber kaynağı'}
+                imageUrl={source.logoUrl}
+                isFollowing={followedSourceIds.has(source.id)}
+                name={source.name}
+                onPress={() =>
+                  navigation.navigate('SourceDetail', {
+                    sourceId: source.id,
+                    sourceName: source.name,
+                  })
+                }
+                onToggleFollow={() => handleToggleSourceFollow(source.id)}
+              />
+            ))
+          )}
         </View>
       </View>
     </ScreenContainer>

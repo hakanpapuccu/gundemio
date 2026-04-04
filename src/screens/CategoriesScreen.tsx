@@ -1,14 +1,42 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { ArticleCard, Chip, ScreenContainer, SectionHeader, TopAppBar } from '../components/ui';
-
-const categoryOptions = ['Tümü', 'Gündem', 'Teknoloji', 'Ekonomi', 'Spor', 'Dünya'] as const;
+import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, SectionHeader, TopAppBar } from '../components/ui';
+import { useArticlesQuery, useCategoriesQuery, useToggleFavoriteMutation } from '../hooks/queries';
+import { DEMO_USER_ID } from '../constants/session';
+import { formatTimeAgoTr } from '../utils/date';
 
 export function CategoriesScreen({ navigation }: MainTabScreenProps<'Categories'>) {
-  const [selectedCategory, setSelectedCategory] = useState<(typeof categoryOptions)[number]>('Teknoloji');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
+  const categoriesQuery = useCategoriesQuery();
+  const toggleFavoriteMutation = useToggleFavoriteMutation();
+  const categoryFilterIds = selectedCategoryId === 'all' ? undefined : [selectedCategoryId];
+
+  const articlesQuery = useArticlesQuery({
+    page: 1,
+    limit: 10,
+    userId: DEMO_USER_ID,
+    filters: {
+      categoryIds: categoryFilterIds,
+    },
+  });
+
+  const categoryItems = useMemo(
+    () => [{ id: 'all', name: 'Tümü' }, ...(categoriesQuery.data ?? []).map((category) => ({ id: category.id, name: category.name }))],
+    [categoriesQuery.data]
+  );
+
+  const selectedCategory = categoryItems.find((category) => category.id === selectedCategoryId);
+
+  const handleToggleFavorite = (articleId: string, isFavorite: boolean) => {
+    toggleFavoriteMutation.mutate({
+      userId: DEMO_USER_ID,
+      articleId,
+      isFavorite: !isFavorite,
+    });
+  };
 
   return (
     <ScreenContainer scrollable>
@@ -19,12 +47,12 @@ export function CategoriesScreen({ navigation }: MainTabScreenProps<'Categories'
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {categoryOptions.map((category) => (
+        {categoryItems.map((category) => (
           <Chip
-            key={category}
-            label={category}
-            onPress={() => setSelectedCategory(category)}
-            selected={category === selectedCategory}
+            key={category.id}
+            label={category.name}
+            onPress={() => setSelectedCategoryId(category.id)}
+            selected={category.id === selectedCategoryId}
           />
         ))}
       </ScrollView>
@@ -34,36 +62,43 @@ export function CategoriesScreen({ navigation }: MainTabScreenProps<'Categories'
           actionLabel="Kaynaklar"
           onPressAction={() =>
             navigation.navigate('SourceDetail', {
-              sourceId: selectedCategory.toLowerCase(),
-              sourceName: `${selectedCategory} Kaynakları`,
+              sourceId: selectedCategory?.id ?? 'all',
+              sourceName: `${selectedCategory?.name ?? 'Tümü'} Kaynakları`,
             })
           }
-          title={`${selectedCategory} Haberleri`}
+          title={`${selectedCategory?.name ?? 'Tümü'} Haberleri`}
         />
-        <ArticleCard
-          onPress={() =>
-            navigation.navigate('ArticleDetail', {
-              articleId: 'category-1',
-              title: 'Yeni Nesil İşlemciler Tanıtıldı',
-            })
-          }
-          publishedLabel="2 saat önce"
-          source="Chip Online"
-          summary="Performans odaklı yeni işlemci ailesi, mobil cihazlarda pil verimliliğini artırmayı hedefliyor."
-          title="Yeni Nesil İşlemciler Tanıtıldı: Performans Sınırları Zorlanıyor"
-        />
-        <ArticleCard
-          onPress={() =>
-            navigation.navigate('ArticleDetail', {
-              articleId: 'category-2',
-              title: 'Yapay Zeka Alanında Devrimsel Gelişme',
-            })
-          }
-          publishedLabel="5 saat önce"
-          source="Teknoloji Haber"
-          summary="Kendi kodunu optimize eden sistemlerin yazılım geliştirme süreçlerini nasıl değiştireceği tartışılıyor."
-          title="Yapay Zeka Alanında Devrimsel Gelişme"
-        />
+        {articlesQuery.isLoading ? (
+          <>
+            <ArticleCardSkeleton />
+            <ArticleCardSkeleton />
+          </>
+        ) : (articlesQuery.data?.items ?? []).length === 0 ? (
+          <EmptyState
+            description="Bu kategori için henüz haber bulunmuyor."
+            icon="folder-open"
+            title="İçerik Bulunamadı"
+          />
+        ) : (
+          (articlesQuery.data?.items ?? []).map((article) => (
+            <ArticleCard
+              key={article.id}
+              bookmarked={article.isFavorite}
+              imageUrl={article.imageUrl}
+              onPress={() =>
+                navigation.navigate('ArticleDetail', {
+                  articleId: article.id,
+                  title: article.title,
+                })
+              }
+              onPressBookmark={() => handleToggleFavorite(article.id, article.isFavorite)}
+              publishedLabel={formatTimeAgoTr(article.publishedAt)}
+              source={article.sourceName}
+              summary={article.summary ?? undefined}
+              title={article.title}
+            />
+          ))
+        )}
       </View>
     </ScreenContainer>
   );
