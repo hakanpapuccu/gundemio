@@ -23,3 +23,27 @@ export function formatTimeAgoTr(isoDate: string, nowDate: Date = new Date()) {
   const days = Math.floor(hours / 24);
   return `${days} gün önce`;
 }
+
+const defaultDateTimeFormatOptions: Intl.DateTimeFormatOptions = {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+};
+
+export function formatDateTimeTr(
+  isoDate: string,
+  options: Intl.DateTimeFormatOptions = defaultDateTimeFormatOptions
+) {
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  try {
+    return new Intl.DateTimeFormat('tr-TR', options).format(date);
+  } catch {
+    return date.toLocaleString('tr-TR');
+  }
+}

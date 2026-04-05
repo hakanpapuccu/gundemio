@@ -23,11 +23,7 @@ export function ProfileScreen({ navigation }: MainTabScreenProps<'Profile'>) {
       key: 'sources',
       label: 'Kaynak Tercihlerim',
       icon: 'list-alt',
-      onPress: () =>
-        navigation.navigate('SourceDetail', {
-          sourceId: 'preferred-sources',
-          sourceName: 'Kaynak Tercihleri',
-        }),
+      onPress: () => navigation.navigate('Sources'),
     },
     {
       key: 'notifications',

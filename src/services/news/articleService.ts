@@ -1,4 +1,4 @@
-import type { Article, Category, PaginatedResult, Source } from '../../domain/models/news';
+import type { Article, ArticleFilters, Category, PaginatedResult, Source } from '../../domain/models/news';
 import type { Database } from '../../types/supabase';
 import { getSupabaseClient } from '../supabase/client';
 import { listFavoriteArticleIds } from './favoriteService';
@@ -17,6 +17,22 @@ function sanitizeSearchValue(value: string) {
 
 function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+function resolveArticleOrder(sortBy?: ArticleFilters['sortBy']) {
+  switch (sortBy) {
+    case 'popular':
+      return {
+        column: 'published_at' as const,
+        ascending: false,
+      };
+    case 'latest':
+    default:
+      return {
+        column: 'published_at' as const,
+        ascending: false,
+      };
+  }
 }
 
 function mapArticleRow(params: {
@@ -61,15 +77,30 @@ export async function listArticles(params: ListArticlesParams = {}): Promise<Pag
   }
 
   const { page, limit, from, to } = resolvePagination(params.page, params.limit);
+  const articleIds = params.filters?.articleIds?.filter(Boolean) ?? [];
   const categoryIds = params.filters?.categoryIds?.filter(Boolean) ?? [];
   const sourceIds = params.filters?.sourceIds?.filter(Boolean) ?? [];
   const search = params.filters?.search?.trim();
+  const order = resolveArticleOrder(params.filters?.sortBy);
+
+  if (params.filters?.articleIds && articleIds.length === 0) {
+    return createPaginatedResult({
+      items: [],
+      page,
+      limit,
+      total: 0,
+    });
+  }
 
   let query = client
     .from('articles')
     .select('*', { count: 'exact' })
-    .order('published_at', { ascending: false })
+    .order(order.column, { ascending: order.ascending })
     .range(from, to);
+
+  if (articleIds.length > 0) {
+    query = query.in('id', articleIds);
+  }
 
   if (categoryIds.length > 0) {
     query = query.in('category_id', categoryIds);

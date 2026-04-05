@@ -4,8 +4,9 @@ import { RootStackScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { ArticleCard, ArticleCardSkeleton, Button, EmptyState, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton } from '../components/ui';
 import { DEMO_USER_ID } from '../constants/session';
-import { useArticlesQuery, useSourceByIdQuery, useToggleFavoriteMutation, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
+import { useArticlesQuery, useSourceByIdQuery, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
 import { formatTimeAgoTr } from '../utils/date';
+import { useBookmarks } from '../hooks/useBookmarks';
 
 export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'SourceDetail'>) {
   const sourceQuery = useSourceByIdQuery({ sourceId: route.params.sourceId });
@@ -14,7 +15,7 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
 
   const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
   const upsertPreferencesMutation = useUpsertPreferencesMutation();
-  const toggleFavoriteMutation = useToggleFavoriteMutation();
+  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
 
   const articlesQuery = useArticlesQuery(
     {
@@ -44,14 +45,6 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
       userId: DEMO_USER_ID,
       categoryIds: userPreferencesQuery.data?.categoryIds ?? [],
       sourceIds: nextSourceIds,
-    });
-  };
-
-  const handleToggleFavorite = (articleId: string, isFavorite: boolean) => {
-    toggleFavoriteMutation.mutate({
-      userId: DEMO_USER_ID,
-      articleId,
-      isFavorite: !isFavorite,
     });
   };
 
@@ -107,7 +100,7 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
           (articlesQuery.data?.items ?? []).map((article) => (
             <ArticleCard
               key={article.id}
-              bookmarked={article.isFavorite}
+              bookmarked={isBookmarked(article.id, article.isFavorite)}
               imageUrl={article.imageUrl}
               onPress={() =>
                 navigation.navigate('ArticleDetail', {
@@ -115,7 +108,7 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
                   title: article.title,
                 })
               }
-              onPressBookmark={() => handleToggleFavorite(article.id, article.isFavorite)}
+              onPressBookmark={() => toggleBookmark(article.id, !isBookmarked(article.id, article.isFavorite))}
               publishedLabel={formatTimeAgoTr(article.publishedAt)}
               source={article.sourceName}
               summary={article.summary ?? undefined}

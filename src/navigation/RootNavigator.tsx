@@ -11,6 +11,7 @@ import { SavedScreen } from '../screens/SavedScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { ArticleDetailScreen } from '../screens/ArticleDetailScreen';
 import { SourceDetailScreen } from '../screens/SourceDetailScreen';
+import { SourcesScreen } from '../screens/SourcesScreen';
 import { PreferencesScreen } from '../screens/PreferencesScreen';
 import { AuthScreen } from '../screens/AuthScreen';
 import { appTheme, navigationTheme } from '../theme';
@@ -70,6 +71,11 @@ export function RootNavigator() {
           options={({ route }) => ({
             title: route.params.sourceName ?? 'Kaynak Detayı',
           })}
+        />
+        <Stack.Screen
+          name="Sources"
+          component={SourcesScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Preferences"

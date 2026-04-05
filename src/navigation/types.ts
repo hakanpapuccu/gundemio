@@ -4,7 +4,11 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type MainTabParamList = {
   Home: undefined;
-  Categories: undefined;
+  Categories:
+    | {
+        categoryId?: string;
+      }
+    | undefined;
   Search: undefined;
   Saved: undefined;
   Profile: undefined;
@@ -20,6 +24,12 @@ export type RootStackParamList = {
     sourceId: string;
     sourceName?: string;
   };
+  Sources:
+    | {
+        categoryId?: string;
+        categoryName?: string;
+      }
+    | undefined;
   Preferences: undefined;
   Auth: {
     mode?: 'signin' | 'signup';

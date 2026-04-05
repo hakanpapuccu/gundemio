@@ -2,7 +2,7 @@ import type { Favorite } from '../../domain/models/news';
 import type { Database } from '../../types/supabase';
 import { getSupabaseClient } from '../supabase/client';
 import { logMockFallback, shouldUseMockFallback } from './fallback';
-import { getMockFavoriteArticleIds, toggleMockFavorite } from './mockData';
+import { localFavoritePersistence } from './favoritePersistence';
 import type { ToggleFavoriteInput } from './types';
 
 type FavoriteRow = Database['public']['Tables']['favorites']['Row'];
@@ -19,7 +19,7 @@ function mapFavoriteRow(row: FavoriteRow): Favorite {
 export async function listFavoriteArticleIds(userId: string, articleIds?: string[]): Promise<string[]> {
   const client = getSupabaseClient();
   if (!client) {
-    return getMockFavoriteArticleIds(userId, articleIds);
+    return localFavoritePersistence.listFavoriteArticleIds(userId, articleIds);
   }
 
   let query = client.from('favorites').select('article_id').eq('user_id', userId);
@@ -33,7 +33,7 @@ export async function listFavoriteArticleIds(userId: string, articleIds?: string
   if (error) {
     if (shouldUseMockFallback(error)) {
       logMockFallback('listFavoriteArticleIds', error);
-      return getMockFavoriteArticleIds(userId, articleIds);
+      return localFavoritePersistence.listFavoriteArticleIds(userId, articleIds);
     }
     throw error;
   }
@@ -44,7 +44,7 @@ export async function listFavoriteArticleIds(userId: string, articleIds?: string
 export async function toggleFavorite(input: ToggleFavoriteInput): Promise<Favorite> {
   const client = getSupabaseClient();
   if (!client) {
-    return toggleMockFavorite(input);
+    return localFavoritePersistence.toggleFavorite(input);
   }
 
   if (!input.isFavorite) {
@@ -57,7 +57,7 @@ export async function toggleFavorite(input: ToggleFavoriteInput): Promise<Favori
     if (error) {
       if (shouldUseMockFallback(error)) {
         logMockFallback('toggleFavorite:delete', error);
-        return toggleMockFavorite(input);
+        return localFavoritePersistence.toggleFavorite(input);
       }
       throw error;
     }
@@ -86,7 +86,7 @@ export async function toggleFavorite(input: ToggleFavoriteInput): Promise<Favori
   if (error) {
     if (shouldUseMockFallback(error)) {
       logMockFallback('toggleFavorite:upsert', error);
-      return toggleMockFavorite(input);
+      return localFavoritePersistence.toggleFavorite(input);
     }
     throw error;
   }

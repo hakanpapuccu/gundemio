@@ -51,9 +51,11 @@ export type UserPreferences = {
 };
 
 export type ArticleFilters = {
+  articleIds?: string[];
   categoryIds?: string[];
   sourceIds?: string[];
   search?: string;
+  sortBy?: 'latest' | 'popular';
 };
 
 export type PaginationParams = {

@@ -34,17 +34,23 @@ export async function listSources(params: ListSourcesParams = {}): Promise<Pagin
 
   const { page, limit, from, to } = resolvePagination(params.page, params.limit);
   const categoryIds = params.categoryIds?.filter(Boolean) ?? [];
+  const sourceIds = params.sourceIds?.filter(Boolean) ?? [];
   const search = params.search?.trim();
+  const isNameSortDescending = params.sortBy === 'name_desc';
 
   let query = client
     .from('sources')
     .select('*', { count: 'exact' })
     .eq('is_active', true)
-    .order('name', { ascending: true })
+    .order('name', { ascending: !isNameSortDescending })
     .range(from, to);
 
   if (categoryIds.length > 0) {
     query = query.in('category_id', categoryIds);
+  }
+
+  if (sourceIds.length > 0) {
+    query = query.in('id', sourceIds);
   }
 
   if (search) {

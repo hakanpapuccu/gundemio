@@ -11,16 +11,20 @@ function normalizeSearch(value?: string) {
 
 export function createArticleFilterKey(filters?: ArticleFilters) {
   return {
+    articleIds: normalizeIds(filters?.articleIds),
     categoryIds: normalizeIds(filters?.categoryIds),
     sourceIds: normalizeIds(filters?.sourceIds),
     search: normalizeSearch(filters?.search),
+    sortBy: filters?.sortBy ?? 'latest',
   };
 }
 
 export function createSourceFilterKey(params?: ListSourcesParams) {
   return {
     categoryIds: normalizeIds(params?.categoryIds),
+    sourceIds: normalizeIds(params?.sourceIds),
     search: normalizeSearch(params?.search),
+    sortBy: params?.sortBy ?? 'name_asc',
     page: params?.page ?? 1,
     limit: params?.limit ?? null,
   };

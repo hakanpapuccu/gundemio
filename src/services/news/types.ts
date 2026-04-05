@@ -9,7 +9,9 @@ export type ListArticlesParams = PaginationParams & {
 
 export type ListSourcesParams = PaginationParams & {
   categoryIds?: string[];
+  sourceIds?: string[];
   search?: string;
+  sortBy?: 'name_asc' | 'name_desc';
 };
 
 export type ToggleFavoriteInput = {

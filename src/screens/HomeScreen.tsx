@@ -1,78 +1,172 @@
-import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import type { ListRenderItemInfo } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { ArticleCard, ArticleCardSkeleton, Chip, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton, TopAppBar } from '../components/ui';
-import {
-  useArticlesQuery,
-  useCategoriesQuery,
-  useSourcesQuery,
-  useToggleFavoriteMutation,
-  useUpsertPreferencesMutation,
-  useUserPreferencesQuery,
-} from '../hooks/queries';
+import type { Article } from '../domain/models/news';
+import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, SkeletonBlock, TopAppBar } from '../components/ui';
+import { useArticlesQuery, useCategoriesQuery } from '../hooks/queries';
 import { DEMO_USER_ID } from '../constants/session';
 import { formatTimeAgoTr } from '../utils/date';
+import { useBookmarks } from '../hooks/useBookmarks';
+
+const ALL_CATEGORY_ID = 'all';
+const HOME_ARTICLE_LIMIT = 20;
 
 export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(ALL_CATEGORY_ID);
 
   const categoriesQuery = useCategoriesQuery();
-  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
-  const toggleFavoriteMutation = useToggleFavoriteMutation();
-  const upsertPreferencesMutation = useUpsertPreferencesMutation();
+  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
 
-  const categoryFilterIds = selectedCategoryId === 'all' ? undefined : [selectedCategoryId];
+  const categoryFilterIds = selectedCategoryId === ALL_CATEGORY_ID ? undefined : [selectedCategoryId];
+
   const articlesQuery = useArticlesQuery({
     page: 1,
-    limit: 3,
+    limit: HOME_ARTICLE_LIMIT,
     userId: DEMO_USER_ID,
     filters: {
       categoryIds: categoryFilterIds,
     },
   });
-  const sourcesQuery = useSourcesQuery({
-    page: 1,
-    limit: 2,
-    categoryIds: categoryFilterIds,
-  });
 
   const categoryItems = useMemo(
-    () => [{ id: 'all', name: 'Tümü' }, ...(categoriesQuery.data ?? []).map((category) => ({ id: category.id, name: category.name }))],
+    () => [
+      { id: ALL_CATEGORY_ID, name: 'Tümü' },
+      ...(categoriesQuery.data ?? []).map((category) => ({ id: category.id, name: category.name })),
+    ],
     [categoriesQuery.data]
   );
 
-  const followedSourceIds = new Set(userPreferencesQuery.data?.sourceIds ?? []);
+  const articles = articlesQuery.data?.items ?? [];
+  const featuredArticle = articles[0];
+  const feedArticles = featuredArticle ? articles.slice(1) : [];
+  const isInitialLoading = categoriesQuery.isLoading || articlesQuery.isLoading;
+  const isRefreshing = !isInitialLoading && (categoriesQuery.isRefetching || articlesQuery.isRefetching);
+  const isError = categoriesQuery.isError || articlesQuery.isError;
 
-  const handleToggleFavorite = (articleId: string, isFavorite: boolean) => {
-    toggleFavoriteMutation.mutate({
-      userId: DEMO_USER_ID,
-      articleId,
-      isFavorite: !isFavorite,
-    });
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([categoriesQuery.refetch(), articlesQuery.refetch()]);
+  }, [articlesQuery, categoriesQuery]);
+
+  const renderArticleItem = ({ item }: ListRenderItemInfo<Article>) => {
+    const bookmarked = isBookmarked(item.id, item.isFavorite);
+
+    return (
+      <ArticleCard
+        bookmarked={bookmarked}
+        imageUrl={item.imageUrl}
+        onPress={() =>
+          navigation.navigate('ArticleDetail', {
+            articleId: item.id,
+            title: item.title,
+          })
+        }
+        onPressBookmark={() => toggleBookmark(item.id, !bookmarked)}
+        publishedLabel={formatTimeAgoTr(item.publishedAt)}
+        source={item.sourceName}
+        style={styles.feedCard}
+        summary={item.summary ?? undefined}
+        title={item.title}
+        variant="compact"
+      />
+    );
   };
 
-  const handleToggleSourceFollow = (sourceId: string) => {
-    const current = userPreferencesQuery.data ?? {
-      userId: DEMO_USER_ID,
-      categoryIds: [],
-      sourceIds: [],
-      updatedAt: new Date().toISOString(),
-    };
+  const renderCategoryChips = () => {
+    if (categoriesQuery.isLoading) {
+      return (
+        <View style={styles.chipSkeletonRow}>
+          <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={72} />
+          <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={96} />
+          <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={88} />
+          <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={80} />
+        </View>
+      );
+    }
 
-    const exists = current.sourceIds.includes(sourceId);
-    const sourceIds = exists ? current.sourceIds.filter((id) => id !== sourceId) : [...current.sourceIds, sourceId];
+    return (
+      <ScrollView
+        contentContainerStyle={styles.chipsContainer}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {categoryItems.map((category) => (
+          <Chip
+            key={category.id}
+            label={category.name}
+            onPress={() => setSelectedCategoryId(category.id)}
+            selected={category.id === selectedCategoryId}
+          />
+        ))}
+      </ScrollView>
+    );
+  };
 
-    upsertPreferencesMutation.mutate({
-      userId: current.userId,
-      categoryIds: current.categoryIds,
-      sourceIds,
-    });
+  const renderListHeader = () => (
+    <View style={styles.listHeader}>
+      {renderCategoryChips()}
+      <View style={styles.featuredContainer}>
+        {isInitialLoading ? (
+          <>
+            <View style={styles.featuredSkeletonCard}>
+              <SkeletonBlock borderRadius={0} height={180} style={styles.featuredSkeletonMedia} />
+              <View style={styles.featuredSkeletonContent}>
+                <SkeletonBlock borderRadius={appTheme.radii.sm} height={20} width={80} />
+                <SkeletonBlock height={26} width="90%" />
+                <SkeletonBlock height={26} width="75%" />
+                <SkeletonBlock height={16} width="45%" />
+              </View>
+            </View>
+            <ArticleCardSkeleton />
+            <ArticleCardSkeleton />
+          </>
+        ) : featuredArticle ? (
+          <ArticleCard
+            bookmarked={isBookmarked(featuredArticle.id, featuredArticle.isFavorite)}
+            category={featuredArticle.categoryName ?? undefined}
+            imageUrl={featuredArticle.imageUrl}
+            onPress={() =>
+              navigation.navigate('ArticleDetail', {
+                articleId: featuredArticle.id,
+                title: featuredArticle.title,
+              })
+            }
+            onPressBookmark={() =>
+              toggleBookmark(
+                featuredArticle.id,
+                !isBookmarked(featuredArticle.id, featuredArticle.isFavorite)
+              )
+            }
+            publishedLabel={formatTimeAgoTr(featuredArticle.publishedAt)}
+            source={featuredArticle.sourceName}
+            style={styles.featuredCard}
+            summary={featuredArticle.summary ?? undefined}
+            title={featuredArticle.title}
+            variant="featured"
+          />
+        ) : null}
+      </View>
+    </View>
+  );
+
+  const renderEmptyState = () => {
+    if (isInitialLoading || featuredArticle) {
+      return null;
+    }
+
+    return (
+      <EmptyState
+        description="Seçtiğin kategori için şu an içerik bulunmuyor. Farklı bir kategori deneyebilirsin."
+        icon="newspaper"
+        title="Henüz haber yok"
+      />
+    );
   };
 
   return (
-    <ScreenContainer scrollable withHorizontalPadding={false}>
+    <ScreenContainer style={styles.container} withHorizontalPadding={false}>
       <TopAppBar
         rightActions={[
           {
@@ -89,102 +183,99 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
         title="Gündemio"
       />
 
-      <ScrollView
-        contentContainerStyle={styles.chipsContainer}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {categoryItems.map((category) => (
-          <Chip
-            key={category.id}
-            label={category.name}
-            onPress={() => setSelectedCategoryId(category.id)}
-            selected={category.id === selectedCategoryId}
+      {isError ? (
+        <View style={styles.errorWrap}>
+          <EmptyState
+            actionLabel="Tekrar Dene"
+            description="Haber akışı alınırken bir sorun oluştu. Yenileyip tekrar deneyebilirsin."
+            icon="warning"
+            onPressAction={() => {
+              void handleRefresh();
+            }}
+            title="Akışa ulaşılamadı"
           />
-        ))}
-      </ScrollView>
-
-      <View style={styles.sectionContainer}>
-        {articlesQuery.isLoading ? (
-          <>
-            <ArticleCardSkeleton />
-            <ArticleCardSkeleton />
-            <ArticleCardSkeleton />
-          </>
-        ) : (
-          (articlesQuery.data?.items ?? []).map((article, index) => (
-            <ArticleCard
-              key={article.id}
-              bookmarked={article.isFavorite}
-              category={article.categoryName ?? undefined}
-              imageUrl={article.imageUrl}
-              onPress={() =>
-                navigation.navigate('ArticleDetail', {
-                  articleId: article.id,
-                  title: article.title,
-                })
-              }
-              onPressBookmark={() => handleToggleFavorite(article.id, article.isFavorite)}
-              publishedLabel={formatTimeAgoTr(article.publishedAt)}
-              source={article.sourceName}
-              summary={article.summary ?? undefined}
-              title={article.title}
-              variant={index === 0 ? 'featured' : 'compact'}
-            />
-          ))
-        )}
-      </View>
-
-      <View style={styles.sectionContainer}>
-        <SectionHeader
-          actionLabel="Tüm Kaynaklar"
-          onPressAction={() => navigation.navigate('Categories')}
-          title="Takip Edilen Kaynaklar"
-        />
-        <View style={styles.sourceList}>
-          {sourcesQuery.isLoading ? (
-            <>
-              <SourceCardSkeleton />
-              <SourceCardSkeleton />
-            </>
-          ) : (
-            (sourcesQuery.data?.items ?? []).map((source) => (
-              <SourceCard
-                key={source.id}
-                description={source.description ?? 'Haber kaynağı'}
-                imageUrl={source.logoUrl}
-                isFollowing={followedSourceIds.has(source.id)}
-                name={source.name}
-                onPress={() =>
-                  navigation.navigate('SourceDetail', {
-                    sourceId: source.id,
-                    sourceName: source.name,
-                  })
-                }
-                onToggleFollow={() => handleToggleSourceFollow(source.id)}
-              />
-            ))
-          )}
         </View>
-      </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.listContent}
+          data={feedArticles}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={renderEmptyState}
+          ListHeaderComponent={renderListHeader}
+          refreshControl={
+            <RefreshControl
+              colors={[appTheme.colors.primary]}
+              onRefresh={() => {
+                void handleRefresh();
+              }}
+              refreshing={isRefreshing}
+              tintColor={appTheme.colors.primary}
+            />
+          }
+          renderItem={renderArticleItem}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: appTheme.colors.background,
+  },
+  chipSkeletonRow: {
+    flexDirection: 'row',
+    gap: appTheme.spacing.sm,
+    paddingHorizontal: appTheme.spacing.lg,
+  },
   chipsContainer: {
     gap: appTheme.spacing.sm,
     paddingHorizontal: appTheme.spacing.lg,
   },
-  sectionContainer: {
+  listHeader: {
+    gap: appTheme.spacing.md,
+    paddingTop: appTheme.spacing.sm,
+  },
+  featuredContainer: {
     gap: appTheme.spacing.md,
     paddingHorizontal: appTheme.spacing.lg,
   },
-  sourceList: {
+  featuredCard: {
+    borderColor: appTheme.colors.borderSoft,
+  },
+  featuredSkeletonCard: {
     backgroundColor: appTheme.colors.surface,
     borderColor: appTheme.colors.borderSoft,
     borderRadius: appTheme.radii.md,
     borderWidth: 1,
     overflow: 'hidden',
+  },
+  featuredSkeletonMedia: {
+    width: '100%',
+  },
+  featuredSkeletonContent: {
+    gap: appTheme.spacing.sm,
+    padding: appTheme.spacing.lg,
+  },
+  listContent: {
+    backgroundColor: appTheme.colors.surface,
+    gap: appTheme.spacing.xs,
+    paddingBottom: appTheme.spacing.xxxl,
+  },
+  feedCard: {
+    borderBottomColor: appTheme.colors.borderSoft,
+    borderBottomWidth: 1,
+    borderRadius: 0,
+    borderWidth: 0,
+    backgroundColor: appTheme.colors.surface,
+    elevation: 0,
+    marginHorizontal: appTheme.spacing.lg,
+    shadowOpacity: 0,
+    shadowRadius: 0,
+  },
+  errorWrap: {
+    backgroundColor: appTheme.colors.surface,
+    flex: 1,
   },
 });

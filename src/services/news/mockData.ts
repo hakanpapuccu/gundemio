@@ -205,12 +205,20 @@ export function getMockCategoriesByIds(ids: string[]): Record<string, Category> 
 export function getMockSources(params: ListSourcesParams = {}): PaginatedResult<Source> {
   const { page, limit } = resolvePagination(params.page, params.limit);
   const categorySet = params.categoryIds && params.categoryIds.length > 0 ? new Set(params.categoryIds) : null;
+  const sourceSet = params.sourceIds && params.sourceIds.length > 0 ? new Set(params.sourceIds) : null;
   const query = normalizeQuery(params.search);
+  const isNameSortDescending = params.sortBy === 'name_desc';
 
   const filtered = mockSources
     .filter((source) => source.isActive)
     .filter((source) => (categorySet ? (source.categoryId ? categorySet.has(source.categoryId) : false) : true))
-    .filter((source) => includesText([source.name, source.description, source.slug], query));
+    .filter((source) => (sourceSet ? sourceSet.has(source.id) : true))
+    .filter((source) => includesText([source.name, source.description, source.slug], query))
+    .sort((left, right) =>
+      isNameSortDescending
+        ? right.name.localeCompare(left.name, 'tr')
+        : left.name.localeCompare(right.name, 'tr')
+    );
 
   const from = (page - 1) * limit;
   const items = filtered.slice(from, from + limit);
@@ -252,17 +260,26 @@ export function getMockFavoriteArticleIds(userId: string, articleIds?: string[])
 
 export function getMockArticles(params: ListArticlesParams = {}): PaginatedResult<Article> {
   const { page, limit } = resolvePagination(params.page, params.limit);
+  const articleSet =
+    params.filters?.articleIds && params.filters.articleIds.length > 0 ? new Set(params.filters.articleIds) : null;
   const categorySet =
     params.filters?.categoryIds && params.filters.categoryIds.length > 0 ? new Set(params.filters.categoryIds) : null;
   const sourceSet = params.filters?.sourceIds && params.filters.sourceIds.length > 0 ? new Set(params.filters.sourceIds) : null;
   const query = normalizeQuery(params.filters?.search);
   const favoriteIds = params.userId ? new Set(getMockFavoriteArticleIds(params.userId)) : new Set<string>();
+  const sortBy = params.filters?.sortBy ?? 'latest';
 
   const filteredBase = mockArticlesBase
+    .filter((article) => (articleSet ? articleSet.has(article.id) : true))
     .filter((article) => (categorySet ? (article.categoryId ? categorySet.has(article.categoryId) : false) : true))
     .filter((article) => (sourceSet ? sourceSet.has(article.sourceId) : true))
     .filter((article) => includesText([article.title, article.summary, article.sourceName, article.categoryName], query))
-    .sort((left, right) => new Date(right.publishedAt).getTime() - new Date(left.publishedAt).getTime());
+    .sort((left, right) => {
+      if (sortBy === 'popular') {
+        return new Date(right.publishedAt).getTime() - new Date(left.publishedAt).getTime();
+      }
+      return new Date(right.publishedAt).getTime() - new Date(left.publishedAt).getTime();
+    });
 
   const from = (page - 1) * limit;
   const items = filteredBase.slice(from, from + limit).map((article) => ({

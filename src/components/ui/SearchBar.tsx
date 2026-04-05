@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, TextInputProps, ViewStyle } from 'react-native';
 
 import { appTheme } from '../../theme';
 import { TextField } from './TextField';
@@ -10,6 +10,7 @@ type SearchBarProps = {
   onChangeText: (text: string) => void;
   onClear?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
+  inputProps?: TextInputProps;
 };
 
 export function SearchBar({
@@ -18,10 +19,12 @@ export function SearchBar({
   onChangeText,
   onClear,
   containerStyle,
+  inputProps,
 }: SearchBarProps) {
   return (
     <View style={[styles.container, containerStyle]}>
       <TextField
+        {...inputProps}
         leftIcon="search"
         onChangeText={onChangeText}
         onPressRightIcon={value.length > 0 ? onClear : undefined}
