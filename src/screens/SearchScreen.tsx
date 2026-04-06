@@ -5,11 +5,11 @@ import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, Icon, ScreenContainer, SearchBar, SectionHeader, TopAppBar } from '../components/ui';
 import { useArticlesQuery, useCategoriesQuery } from '../hooks/queries';
-import { DEMO_USER_ID } from '../constants/session';
 import { formatTimeAgoTr } from '../utils/date';
 import { useDiscoveryStore } from '../store/useDiscoveryStore';
 import type { IconName } from '../components/ui';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 const trendingTopics = ['#Dolar', '#Bitcoin', '#TransferHaberleri', '#EYT', '#HavaDurumu', '#ŞampiyonlarLigi'];
 const ALL_RESULT_CATEGORY_ID = 'all';
@@ -50,8 +50,9 @@ export function SearchScreen({ navigation }: MainTabScreenProps<'Search'>) {
   const [query, setQuery] = useState('');
   const [selectedResultCategoryId, setSelectedResultCategoryId] = useState<string>(ALL_RESULT_CATEGORY_ID);
   const normalizedQuery = query.trim();
+  const { activeUserId } = useSession();
   const categoriesQuery = useCategoriesQuery();
-  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
+  const { isBookmarked, toggleBookmark } = useBookmarks(activeUserId);
   const recentSearches = useDiscoveryStore((state) => state.recentSearches);
   const addRecentSearch = useDiscoveryStore((state) => state.addRecentSearch);
   const removeRecentSearch = useDiscoveryStore((state) => state.removeRecentSearch);
@@ -67,7 +68,7 @@ export function SearchScreen({ navigation }: MainTabScreenProps<'Search'>) {
     {
       page: 1,
       limit: 10,
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       filters: {
         search: normalizedQuery,
         categoryIds: categoryFilterIds,

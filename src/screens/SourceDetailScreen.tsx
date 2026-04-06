@@ -3,25 +3,26 @@ import { StyleSheet, Text, View } from 'react-native';
 import { RootStackScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { ArticleCard, ArticleCardSkeleton, Button, EmptyState, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton } from '../components/ui';
-import { DEMO_USER_ID } from '../constants/session';
 import { useArticlesQuery, useSourceByIdQuery, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'SourceDetail'>) {
+  const { activeUserId } = useSession();
   const sourceQuery = useSourceByIdQuery({ sourceId: route.params.sourceId });
   const source = sourceQuery.data;
   const sourceName = source?.name ?? route.params.sourceName ?? 'Kaynak Detayı';
 
-  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
+  const userPreferencesQuery = useUserPreferencesQuery({ userId: activeUserId });
   const upsertPreferencesMutation = useUpsertPreferencesMutation();
-  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
+  const { isBookmarked, toggleBookmark } = useBookmarks(activeUserId);
 
   const articlesQuery = useArticlesQuery(
     {
       page: 1,
       limit: 10,
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       filters: source ? { sourceIds: [source.id] } : undefined,
     },
     {
@@ -42,7 +43,7 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
       : [...selectedSourceIds, source.id];
 
     upsertPreferencesMutation.mutate({
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       categoryIds: userPreferencesQuery.data?.categoryIds ?? [],
       sourceIds: nextSourceIds,
     });

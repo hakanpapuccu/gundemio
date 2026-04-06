@@ -5,16 +5,17 @@ import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, TopAppBar } from '../components/ui';
 import { useArticlesQuery, useCategoriesQuery, useSourcesQuery } from '../hooks/queries';
-import { DEMO_USER_ID } from '../constants/session';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Categories'>) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest');
   const [selectedSourceId, setSelectedSourceId] = useState<string>('all');
+  const { activeUserId } = useSession();
   const categoriesQuery = useCategoriesQuery();
-  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
+  const { isBookmarked, toggleBookmark } = useBookmarks(activeUserId);
   const categoryFilterIds = selectedCategoryId === 'all' ? undefined : [selectedCategoryId];
 
   const sourcesQuery = useSourcesQuery({
@@ -37,7 +38,7 @@ export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Cate
   const articlesQuery = useArticlesQuery({
     page: 1,
     limit: 10,
-    userId: DEMO_USER_ID,
+    userId: activeUserId,
     filters: {
       categoryIds: categoryFilterIds,
       sourceIds: selectedSourceId === 'all' ? undefined : [selectedSourceId],

@@ -7,25 +7,26 @@ import { appTheme } from '../theme';
 import type { Article } from '../domain/models/news';
 import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, SkeletonBlock, TopAppBar } from '../components/ui';
 import { useArticlesQuery, useCategoriesQuery } from '../hooks/queries';
-import { DEMO_USER_ID } from '../constants/session';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 const ALL_CATEGORY_ID = 'all';
 const HOME_ARTICLE_LIMIT = 20;
 
 export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(ALL_CATEGORY_ID);
+  const { activeUserId } = useSession();
 
   const categoriesQuery = useCategoriesQuery();
-  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
+  const { isBookmarked, toggleBookmark } = useBookmarks(activeUserId);
 
   const categoryFilterIds = selectedCategoryId === ALL_CATEGORY_ID ? undefined : [selectedCategoryId];
 
   const articlesQuery = useArticlesQuery({
     page: 1,
     limit: HOME_ARTICLE_LIMIT,
-    userId: DEMO_USER_ID,
+    userId: activeUserId,
     filters: {
       categoryIds: categoryFilterIds,
     },

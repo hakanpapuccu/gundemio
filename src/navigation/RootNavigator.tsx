@@ -14,6 +14,7 @@ import { SourceDetailScreen } from '../screens/SourceDetailScreen';
 import { SourcesScreen } from '../screens/SourcesScreen';
 import { PreferencesScreen } from '../screens/PreferencesScreen';
 import { AuthScreen } from '../screens/AuthScreen';
+import { ProfileEditScreen } from '../screens/ProfileEditScreen';
 import { appTheme, navigationTheme } from '../theme';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -81,6 +82,11 @@ export function RootNavigator() {
           name="Preferences"
           component={PreferencesScreen}
           options={{ title: 'Tercihler' }}
+        />
+        <Stack.Screen
+          name="ProfileEdit"
+          component={ProfileEditScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Auth"

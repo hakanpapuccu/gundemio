@@ -1,22 +1,38 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { appTheme } from '../theme';
-import { Button, Chip, ScreenContainer, SectionHeader, SourceCard, SourceCardSkeleton } from '../components/ui';
-import { DEMO_USER_ID } from '../constants/session';
-import { useCategoriesQuery, useSourcesQuery, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
+import {
+  Button,
+  Chip,
+  ScreenContainer,
+  SectionHeader,
+  SourceCard,
+  SourceCardSkeleton,
+} from '../components/ui';
+import {
+  useCategoriesQuery,
+  useSourcesQuery,
+  useUpsertPreferencesMutation,
+  useUserPreferencesQuery,
+} from '../hooks/queries';
+import { useSession } from '../hooks/useSession';
 
 export function PreferencesScreen() {
+  const { activeUserId, isAuthenticated } = useSession();
   const categoriesQuery = useCategoriesQuery();
   const sourcesQuery = useSourcesQuery({ page: 1, limit: 20 });
-  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
+  const userPreferencesQuery = useUserPreferencesQuery({ userId: activeUserId });
   const upsertPreferencesMutation = useUpsertPreferencesMutation();
 
   const selectedCategoryIds = userPreferencesQuery.data?.categoryIds ?? [];
   const selectedSourceIds = userPreferencesQuery.data?.sourceIds ?? [];
 
-  const commitPreferences = (params: { categoryIds: string[]; sourceIds: string[] }) => {
+  const commitPreferences = (params: {
+    categoryIds: string[];
+    sourceIds: string[];
+  }) => {
     upsertPreferencesMutation.mutate({
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       categoryIds: params.categoryIds,
       sourceIds: params.sourceIds,
     });
@@ -44,7 +60,7 @@ export function PreferencesScreen() {
     });
   };
 
-  const reset = () => {
+  const resetPreferences = () => {
     commitPreferences({
       categoryIds: [],
       sourceIds: [],
@@ -53,6 +69,22 @@ export function PreferencesScreen() {
 
   return (
     <ScreenContainer scrollable>
+      <View style={styles.heroCard}>
+        <Text style={styles.heroTitle}>Ilgi alanina gore filtrele</Text>
+        <Text style={styles.heroSubtitle}>
+          Senin icin onemli olan kategorileri ve kaynaklari secerek akisina yon ver.
+        </Text>
+      </View>
+
+      {!isAuthenticated ? (
+        <View style={styles.guestNotice}>
+          <Text style={styles.guestNoticeTitle}>Misafir modundasin</Text>
+          <Text style={styles.guestNoticeBody}>
+            Tercihlerin bu cihazda saklanir. Hesapla giris yaparsan tercihlerin cihazlar arasi senkron olur.
+          </Text>
+        </View>
+      ) : null}
+
       <View style={styles.section}>
         <SectionHeader title="Kategori Tercihleri" />
         <ScrollView
@@ -84,7 +116,7 @@ export function PreferencesScreen() {
             (sourcesQuery.data?.items ?? []).map((source) => (
               <SourceCard
                 key={source.id}
-                description={source.description ?? 'Haber kaynağı'}
+                description={source.description ?? 'Haber kaynagi'}
                 imageUrl={source.logoUrl}
                 isFollowing={selectedSourceIds.includes(source.id)}
                 name={source.name}
@@ -95,12 +127,65 @@ export function PreferencesScreen() {
         </View>
       </View>
 
-      <Button fullWidth label="Tercihleri Sıfırla" onPress={reset} size="lg" variant="ghost" />
+      {upsertPreferencesMutation.error ? (
+        <Text style={styles.errorText}>
+          Tercihler kaydedilemedi. Baglantiyi kontrol edip tekrar dene.
+        </Text>
+      ) : null}
+
+      <Button
+        fullWidth
+        label="Tercihleri Sifirla"
+        loading={upsertPreferencesMutation.isPending}
+        onPress={resetPreferences}
+        size="lg"
+        variant="ghost"
+      />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  heroCard: {
+    backgroundColor: appTheme.colors.surface,
+    borderColor: appTheme.colors.border,
+    borderRadius: appTheme.radii.xl,
+    borderWidth: 1,
+    gap: appTheme.spacing.sm,
+    padding: appTheme.spacing.xxl,
+  },
+  heroTitle: {
+    color: appTheme.colors.textPrimary,
+    fontFamily: appTheme.typography.fontFamily.display,
+    fontSize: appTheme.typography.fontSize.xxl,
+    fontWeight: appTheme.typography.fontWeight.bold,
+    lineHeight: appTheme.typography.lineHeight.xxl,
+  },
+  heroSubtitle: {
+    color: appTheme.colors.textSecondary,
+    fontFamily: appTheme.typography.fontFamily.body,
+    fontSize: appTheme.typography.fontSize.md,
+    lineHeight: appTheme.typography.lineHeight.md,
+  },
+  guestNotice: {
+    backgroundColor: appTheme.colors.primarySoft,
+    borderRadius: appTheme.radii.md,
+    gap: appTheme.spacing.xs,
+    padding: appTheme.spacing.md,
+  },
+  guestNoticeTitle: {
+    color: appTheme.colors.primary,
+    fontFamily: appTheme.typography.fontFamily.display,
+    fontSize: appTheme.typography.fontSize.md,
+    fontWeight: appTheme.typography.fontWeight.bold,
+    lineHeight: appTheme.typography.lineHeight.md,
+  },
+  guestNoticeBody: {
+    color: appTheme.colors.textSecondary,
+    fontFamily: appTheme.typography.fontFamily.body,
+    fontSize: appTheme.typography.fontSize.sm,
+    lineHeight: appTheme.typography.lineHeight.sm,
+  },
   section: {
     gap: appTheme.spacing.md,
   },
@@ -113,5 +198,11 @@ const styles = StyleSheet.create({
     borderRadius: appTheme.radii.md,
     borderWidth: 1,
     overflow: 'hidden',
+  },
+  errorText: {
+    color: appTheme.colors.danger,
+    fontFamily: appTheme.typography.fontFamily.body,
+    fontSize: appTheme.typography.fontSize.sm,
+    lineHeight: appTheme.typography.lineHeight.sm,
   },
 });

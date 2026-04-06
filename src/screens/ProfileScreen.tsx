@@ -1,174 +1,207 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { Button, Icon, ScreenContainer, TopAppBar } from '../components/ui';
+import { Button, ScreenContainer, TopAppBar } from '../components/ui';
+import { useSession } from '../hooks/useSession';
+import {
+  SettingsMenuList,
+  type SettingsMenuItem,
+} from '../components/profile/SettingsMenuList';
+import { ProfileSummaryCard } from '../components/profile/ProfileSummaryCard';
 
-type ProfileMenuItem = {
-  key: string;
-  label: string;
-  icon: 'tag' | 'list-alt' | 'notifications' | 'shield' | 'info';
-  onPress: () => void;
-};
+function showPlaceholderAlert() {
+  Alert.alert(
+    'Yakinda aktif olacak',
+    'Bu ayar su an tasarima uygun placeholder olarak acik. Backend baglantisi hazir oldugunda etkinlestirilecek.'
+  );
+}
 
 export function ProfileScreen({ navigation }: MainTabScreenProps<'Profile'>) {
-  const menuItems: ProfileMenuItem[] = [
-    {
-      key: 'interests',
-      label: 'İlgi Alanlarım',
-      icon: 'tag',
-      onPress: () => navigation.navigate('Preferences'),
-    },
-    {
-      key: 'sources',
-      label: 'Kaynak Tercihlerim',
-      icon: 'list-alt',
-      onPress: () => navigation.navigate('Sources'),
-    },
-    {
-      key: 'notifications',
-      label: 'Bildirimler',
-      icon: 'notifications',
-      onPress: () => navigation.navigate('Preferences'),
-    },
-    {
-      key: 'privacy',
-      label: 'Gizlilik ve Güvenlik',
-      icon: 'shield',
-      onPress: () => navigation.navigate('Preferences'),
-    },
-    {
-      key: 'about',
-      label: 'Uygulama Hakkında',
-      icon: 'info',
-      onPress: () => navigation.navigate('Preferences'),
-    },
-  ];
+  const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
+  const tabBarHeight = useBottomTabBarHeight();
+  const {
+    isAuthenticated,
+    profile,
+    errorMessage,
+    signOut,
+  } = useSession();
+
+  const statusLabel = isAuthenticated ? 'Giris Yapmis Kullanici' : 'Giris Yapilmadi';
+  const displayName = profile.displayName || 'Misafir Kullanici';
+
+  const menuItems = useMemo<SettingsMenuItem[]>(
+    () => [
+      {
+        key: 'profile-edit',
+        label: 'Profili Duzenle',
+        icon: 'edit',
+        trailing: 'chevron',
+        onPress: () => navigation.navigate('ProfileEdit'),
+      },
+      {
+        key: 'interests',
+        label: 'Ilgi Alanlarim',
+        icon: 'tag',
+        trailing: 'chevron',
+        onPress: () => navigation.navigate('Preferences'),
+      },
+      {
+        key: 'sources',
+        label: 'Kaynak Tercihlerim',
+        icon: 'list-alt',
+        trailing: 'chevron',
+        onPress: () => navigation.navigate('Sources'),
+      },
+      {
+        key: 'theme',
+        label: 'Koyu Tema',
+        icon: 'dark-mode',
+        trailing: 'switch',
+        switchValue: isDarkModeEnabled,
+        onPress: () => {
+          setIsDarkModeEnabled((current) => !current);
+          showPlaceholderAlert();
+        },
+      },
+      {
+        key: 'notifications',
+        label: 'Bildirimler',
+        icon: 'notifications',
+        trailing: 'chevron',
+        onPress: showPlaceholderAlert,
+      },
+      {
+        key: 'privacy',
+        label: 'Gizlilik ve Guvenlik',
+        icon: 'shield',
+        trailing: 'chevron',
+        onPress: showPlaceholderAlert,
+      },
+      {
+        key: 'about',
+        label: 'Uygulama Hakkinda',
+        icon: 'info',
+        trailing: 'chevron',
+        onPress: showPlaceholderAlert,
+      },
+    ],
+    [isDarkModeEnabled, navigation]
+  );
+
+  const handleSignOut = async () => {
+    const result = await signOut();
+    if (!result.ok && result.message) {
+      Alert.alert('Cikis yapilamadi', result.message);
+      return;
+    }
+
+    if (result.message) {
+      Alert.alert('Cikis', result.message);
+    }
+  };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer
+      contentContainerStyle={[
+        styles.contentContainer,
+        { paddingBottom: tabBarHeight + appTheme.spacing.xxl },
+      ]}
+      scrollable
+      style={styles.container}
+      withHorizontalPadding={false}
+    >
       <TopAppBar title="Profil ve Ayarlar" />
 
-      <View style={styles.profileCard}>
-        <View style={styles.avatar}>
-          <Icon color={appTheme.colors.primary} name="person" size={40} />
-        </View>
-        <Text style={styles.name}>Misafir Kullanıcı</Text>
-        <Text style={styles.badge}>Giriş yapılmadı</Text>
+      <ProfileSummaryCard
+        displayName={displayName}
+        email={isAuthenticated ? profile.email : null}
+        statusLabel={statusLabel}
+      />
+
+      <SettingsMenuList items={menuItems} />
+
+      <View style={styles.actionSection}>
+        {isAuthenticated ? (
+          <Button
+            fullWidth
+            label="Cikis Yap"
+            leftIcon="logout"
+            onPress={() => void handleSignOut()}
+            size="lg"
+            variant="danger"
+          />
+        ) : (
+          <>
+            <Button
+              fullWidth
+              label="Giris Yap"
+              onPress={() => navigation.navigate('Auth', { mode: 'signin' })}
+              size="lg"
+            />
+            <Button
+              fullWidth
+              label="Kayit Ol"
+              onPress={() => navigation.navigate('Auth', { mode: 'signup' })}
+              size="lg"
+              variant="secondary"
+            />
+          </>
+        )}
       </View>
 
-      <View style={styles.menuList}>
-        {menuItems.map((item) => (
-          <Pressable
-            key={item.key}
-            accessibilityRole="button"
-            onPress={item.onPress}
-            style={styles.menuItem}
-          >
-            <View style={styles.menuLeft}>
-              <View style={styles.menuIcon}>
-                <Icon color={appTheme.colors.primary} name={item.icon} size={appTheme.sizes.iconLg} />
-              </View>
-              <Text style={styles.menuLabel}>{item.label}</Text>
-            </View>
-            <Icon color={appTheme.colors.textMuted} name="chevron-right" size={appTheme.sizes.iconLg} />
-          </Pressable>
-        ))}
-      </View>
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-      <View style={styles.authActions}>
-        <Button
-          fullWidth
-          label="Giriş Yap"
-          onPress={() => navigation.navigate('Auth', { mode: 'signin' })}
-          size="lg"
-        />
-        <Button
-          fullWidth
-          label="Kayıt Ol"
-          onPress={() => navigation.navigate('Auth', { mode: 'signup' })}
-          size="lg"
-          variant="secondary"
-        />
+      <View style={styles.versionSection}>
+        <Text style={styles.versionText}>Gundemio v2.4.0 (Build 842)</Text>
+        <Text style={styles.versionSubtext}>Proudly made for news junkies</Text>
       </View>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  profileCard: {
-    alignItems: 'center',
-    backgroundColor: appTheme.colors.surface,
-    borderColor: appTheme.colors.borderSoft,
-    borderRadius: appTheme.radii.lg,
-    borderWidth: 1,
+  container: {
+    backgroundColor: appTheme.colors.background,
+  },
+  contentContainer: {
+    paddingBottom: appTheme.spacing.xxxl,
+  },
+  actionSection: {
+    gap: appTheme.spacing.md,
     paddingHorizontal: appTheme.spacing.lg,
-    paddingVertical: appTheme.spacing.xxl,
+    paddingTop: appTheme.spacing.lg,
   },
-  avatar: {
-    alignItems: 'center',
-    backgroundColor: appTheme.colors.primarySoft,
-    borderRadius: appTheme.radii.full,
-    height: 96,
-    justifyContent: 'center',
-    marginBottom: appTheme.spacing.md,
-    width: 96,
-  },
-  name: {
-    color: appTheme.colors.textPrimary,
-    fontFamily: appTheme.typography.fontFamily.display,
-    fontSize: appTheme.typography.fontSize.xxl,
-    fontWeight: appTheme.typography.fontWeight.bold,
-    lineHeight: appTheme.typography.lineHeight.xxl,
-  },
-  badge: {
-    color: appTheme.colors.primary,
+  errorText: {
+    color: appTheme.colors.danger,
     fontFamily: appTheme.typography.fontFamily.body,
     fontSize: appTheme.typography.fontSize.sm,
-    fontWeight: appTheme.typography.fontWeight.semiBold,
     lineHeight: appTheme.typography.lineHeight.sm,
-    marginTop: appTheme.spacing.xs,
-  },
-  menuList: {
-    backgroundColor: appTheme.colors.surface,
-    borderColor: appTheme.colors.borderSoft,
-    borderRadius: appTheme.radii.lg,
-    borderWidth: 1,
-    overflow: 'hidden',
-  },
-  menuItem: {
-    alignItems: 'center',
-    borderBottomColor: appTheme.colors.borderSoft,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minHeight: 64,
     paddingHorizontal: appTheme.spacing.lg,
-    paddingVertical: appTheme.spacing.md,
   },
-  menuLeft: {
+  versionSection: {
     alignItems: 'center',
-    flexDirection: 'row',
-    flex: 1,
-    gap: appTheme.spacing.md,
+    gap: appTheme.spacing.xs,
+    opacity: 0.45,
+    paddingHorizontal: appTheme.spacing.lg,
+    paddingTop: appTheme.spacing.lg,
   },
-  menuIcon: {
-    alignItems: 'center',
-    backgroundColor: appTheme.colors.primarySoft,
-    borderRadius: appTheme.radii.md,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  menuLabel: {
-    color: appTheme.colors.textPrimary,
-    flex: 1,
+  versionText: {
+    color: appTheme.colors.textSecondary,
     fontFamily: appTheme.typography.fontFamily.body,
-    fontSize: appTheme.typography.fontSize.lg,
+    fontSize: appTheme.typography.fontSize.xs,
     fontWeight: appTheme.typography.fontWeight.medium,
-    lineHeight: appTheme.typography.lineHeight.lg,
+    letterSpacing: appTheme.typography.letterSpacing.normal,
+    lineHeight: appTheme.typography.lineHeight.xs,
   },
-  authActions: {
-    gap: appTheme.spacing.md,
+  versionSubtext: {
+    color: appTheme.colors.textMuted,
+    fontFamily: appTheme.typography.fontFamily.body,
+    fontSize: 10,
+    letterSpacing: appTheme.typography.letterSpacing.wider,
+    lineHeight: 12,
+    textTransform: 'uppercase',
   },
 });

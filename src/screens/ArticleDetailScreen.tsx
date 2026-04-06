@@ -21,7 +21,6 @@ import {
   SectionHeader,
   SkeletonBlock,
 } from '../components/ui';
-import { DEMO_USER_ID } from '../constants/session';
 import {
   useArticleByIdQuery,
   useArticlesQuery,
@@ -29,6 +28,7 @@ import {
 } from '../hooks/queries';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 const WORDS_PER_MINUTE = 220;
 
@@ -231,10 +231,11 @@ export function ArticleDetailScreen({
   navigation,
   route,
 }: RootStackScreenProps<'ArticleDetail'>) {
-  const { isBookmarked, toggleBookmark } = useBookmarks(DEMO_USER_ID);
+  const { activeUserId } = useSession();
+  const { isBookmarked, toggleBookmark } = useBookmarks(activeUserId);
   const articleQuery = useArticleByIdQuery({
     articleId: route.params.articleId,
-    userId: DEMO_USER_ID,
+    userId: activeUserId,
   });
   const article = articleQuery.data;
   const articleBookmarked = article ? isBookmarked(article.id, article.isFavorite) : false;
@@ -248,7 +249,7 @@ export function ArticleDetailScreen({
     {
       page: 1,
       limit: 5,
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       filters: article ? { sourceIds: [article.sourceId] } : undefined,
     },
     {

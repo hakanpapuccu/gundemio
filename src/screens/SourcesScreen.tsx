@@ -4,8 +4,8 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { RootStackScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { EmptyState, ScreenContainer, SearchBar, SourceCard, SourceCardSkeleton, TopAppBar } from '../components/ui';
-import { DEMO_USER_ID } from '../constants/session';
 import { useCategoriesQuery, useSourcesQuery, useUpsertPreferencesMutation, useUserPreferencesQuery } from '../hooks/queries';
+import { useSession } from '../hooks/useSession';
 
 type SourceTabKey = 'all' | 'followed' | 'recommended';
 
@@ -18,6 +18,7 @@ const SOURCE_TABS: { key: SourceTabKey; label: string }[] = [
 export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sources'>) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<SourceTabKey>('all');
+  const { activeUserId } = useSession();
 
   const normalizedSearch = searchQuery.trim();
   const categoryScopeIds = useMemo(
@@ -26,7 +27,7 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
   );
 
   const categoriesQuery = useCategoriesQuery();
-  const userPreferencesQuery = useUserPreferencesQuery({ userId: DEMO_USER_ID });
+  const userPreferencesQuery = useUserPreferencesQuery({ userId: activeUserId });
   const upsertPreferencesMutation = useUpsertPreferencesMutation();
 
   const selectedSourceIds = useMemo(
@@ -89,7 +90,7 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
       : [...selectedSourceIds, sourceId];
 
     upsertPreferencesMutation.mutate({
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       categoryIds: selectedCategoryIds,
       sourceIds: nextSourceIds,
     });

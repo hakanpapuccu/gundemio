@@ -5,9 +5,9 @@ import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
 import { ArticleCard, ArticleCardSkeleton, EmptyState, Icon, ScreenContainer, TopAppBar } from '../components/ui';
 import { useArticlesQuery } from '../hooks/queries';
-import { DEMO_USER_ID } from '../constants/session';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
+import { useSession } from '../hooks/useSession';
 
 type SavedFilter = 'all' | 'favorites';
 
@@ -18,7 +18,8 @@ const SAVED_FILTERS: { key: SavedFilter; label: string }[] = [
 
 export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
   const [activeFilter, setActiveFilter] = useState<SavedFilter>('all');
-  const { favoriteArticleIds, hasHydrated, isLoading: isBookmarksLoading, isBookmarked, removeBookmark } = useBookmarks(DEMO_USER_ID);
+  const { activeUserId } = useSession();
+  const { favoriteArticleIds, hasHydrated, isLoading: isBookmarksLoading, isBookmarked, removeBookmark } = useBookmarks(activeUserId);
 
   const normalizedFavoriteArticleIds = useMemo(
     () => [...new Set(favoriteArticleIds.filter(Boolean))],
@@ -29,7 +30,7 @@ export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
     {
       page: 1,
       limit: 50,
-      userId: DEMO_USER_ID,
+      userId: activeUserId,
       filters: {
         articleIds: normalizedFavoriteArticleIds,
       },

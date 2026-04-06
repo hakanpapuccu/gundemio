@@ -30,6 +30,7 @@ export type RootStackParamList = {
         categoryName?: string;
       }
     | undefined;
+  ProfileEdit: undefined;
   Preferences: undefined;
   Auth: {
     mode?: 'signin' | 'signup';
