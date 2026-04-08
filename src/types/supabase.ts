@@ -50,6 +50,7 @@ export type Database = {
           slug: string;
           name: string;
           description: string | null;
+          rss_url: string | null;
           website_url: string | null;
           logo_url: string | null;
           category_id: string | null;
@@ -61,6 +62,7 @@ export type Database = {
           slug: string;
           name: string;
           description?: string | null;
+          rss_url?: string | null;
           website_url?: string | null;
           logo_url?: string | null;
           category_id?: string | null;
@@ -72,6 +74,7 @@ export type Database = {
           slug?: string;
           name?: string;
           description?: string | null;
+          rss_url?: string | null;
           website_url?: string | null;
           logo_url?: string | null;
           category_id?: string | null;
@@ -88,6 +91,8 @@ export type Database = {
           content: string | null;
           image_url: string | null;
           link: string;
+          guid: string | null;
+          content_hash: string | null;
           published_at: string;
           source_id: string;
           category_id: string | null;
@@ -100,6 +105,8 @@ export type Database = {
           content?: string | null;
           image_url?: string | null;
           link: string;
+          guid?: string | null;
+          content_hash?: string | null;
           published_at: string;
           source_id: string;
           category_id?: string | null;
@@ -112,6 +119,8 @@ export type Database = {
           content?: string | null;
           image_url?: string | null;
           link?: string;
+          guid?: string | null;
+          content_hash?: string | null;
           published_at?: string;
           source_id?: string;
           category_id?: string | null;

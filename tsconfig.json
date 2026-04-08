@@ -4,5 +4,5 @@
     "strict": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["App.tsx", "index.ts", "src", "src/types/env.d.ts"]
+  "include": ["App.tsx", "index.ts", "src", "scripts", "src/types/env.d.ts"]
 }

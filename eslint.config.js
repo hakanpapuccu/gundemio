@@ -5,7 +5,7 @@ const { defineConfig } = require('eslint/config');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['node_modules/**', 'stitch/**', 'dist/**'],
+    ignores: ['node_modules/**', 'stitch/**', 'dist/**', 'supabase/**'],
     rules: {
       'react/react-in-jsx-scope': 'off',
     },
