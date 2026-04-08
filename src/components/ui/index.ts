@@ -8,6 +8,7 @@ export { ScreenContainer } from './ScreenContainer';
 export { SearchBar } from './SearchBar';
 export { SectionHeader } from './SectionHeader';
 export { SkeletonBlock, ArticleCardSkeleton, SourceCardSkeleton } from './Skeleton';
+export { RemoteImage } from './RemoteImage';
 export { SourceCard } from './SourceCard';
 export { TextField } from './TextField';
 export { TopAppBar } from './TopAppBar';

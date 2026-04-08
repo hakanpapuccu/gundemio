@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
@@ -83,6 +83,11 @@ export function SearchScreen({ navigation }: MainTabScreenProps<'Search'>) {
     () => [{ id: ALL_RESULT_CATEGORY_ID, name: 'Tümü' }, ...(categoriesQuery.data ?? [])],
     [categoriesQuery.data]
   );
+  const isSearchError = normalizedQuery.length > 0 && searchQuery.isError;
+
+  const handleRetrySearch = useCallback(async () => {
+    await Promise.all([categoriesQuery.refetch(), searchQuery.refetch()]);
+  }, [categoriesQuery, searchQuery]);
 
   const runSearch = (value: string) => {
     const normalized = value.trim();
@@ -153,40 +158,54 @@ export function SearchScreen({ navigation }: MainTabScreenProps<'Search'>) {
           </View>
 
           <View style={styles.section}>
-            <SectionHeader
-              actionLabel="Kategoriler"
-              onPressAction={() => navigation.navigate('Categories')}
-              title="Önerilen Kategoriler"
-            />
-            <View style={styles.categoryGrid}>
-              {(categoriesQuery.data ?? []).slice(0, 8).map((category, index) => {
-                const key = (category.slug || category.name).toLocaleLowerCase('tr');
-                const visual =
-                  categoryVisualBySlug[key] ??
-                  categoryVisualFallbacks[index % categoryVisualFallbacks.length] ??
-                  categoryVisualFallbacks[0]!;
+            {categoriesQuery.isError ? (
+              <EmptyState
+                actionLabel="Tekrar Dene"
+                description="Kategoriler yüklenirken bir sorun oluştu."
+                icon="warning"
+                onPressAction={() => {
+                  void categoriesQuery.refetch();
+                }}
+                title="Kategoriler yüklenemedi"
+              />
+            ) : (
+              <>
+                <SectionHeader
+                  actionLabel="Kategoriler"
+                  onPressAction={() => navigation.navigate('Categories')}
+                  title="Önerilen Kategoriler"
+                />
+                <View style={styles.categoryGrid}>
+                  {(categoriesQuery.data ?? []).slice(0, 8).map((category, index) => {
+                    const key = (category.slug || category.name).toLocaleLowerCase('tr');
+                    const visual =
+                      categoryVisualBySlug[key] ??
+                      categoryVisualFallbacks[index % categoryVisualFallbacks.length] ??
+                      categoryVisualFallbacks[0]!;
 
-                return (
-                  <Pressable
-                    key={category.id}
-                    accessibilityRole="button"
-                    onPress={() =>
-                      navigation.navigate('Categories', {
-                        categoryId: category.id,
-                      })
-                    }
-                    style={styles.categoryQuickItem}
-                  >
-                    <View style={[styles.categoryQuickIconWrap, { backgroundColor: visual.backgroundColor }]}>
-                      <Icon color={visual.iconColor} name={visual.icon} size={appTheme.sizes.iconXl} />
-                    </View>
-                    <Text numberOfLines={1} style={styles.categoryQuickLabel}>
-                      {category.name}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+                    return (
+                      <Pressable
+                        key={category.id}
+                        accessibilityRole="button"
+                        onPress={() =>
+                          navigation.navigate('Categories', {
+                            categoryId: category.id,
+                          })
+                        }
+                        style={styles.categoryQuickItem}
+                      >
+                        <View style={[styles.categoryQuickIconWrap, { backgroundColor: visual.backgroundColor }]}>
+                          <Icon color={visual.iconColor} name={visual.icon} size={appTheme.sizes.iconXl} />
+                        </View>
+                        <Text numberOfLines={1} style={styles.categoryQuickLabel}>
+                          {category.name}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </>
+            )}
           </View>
 
           <EmptyState
@@ -212,7 +231,17 @@ export function SearchScreen({ navigation }: MainTabScreenProps<'Search'>) {
             ))}
           </ScrollView>
 
-          {searchQuery.isLoading ? (
+          {isSearchError ? (
+            <EmptyState
+              actionLabel="Tekrar Dene"
+              description="Arama sonuçları alınırken bir sorun oluştu."
+              icon="warning"
+              onPressAction={() => {
+                void handleRetrySearch();
+              }}
+              title="Arama tamamlanamadı"
+            />
+          ) : searchQuery.isLoading ? (
             <>
               <SectionHeader title={`"${normalizedQuery}" için sonuçlar`} />
               <ArticleCardSkeleton />

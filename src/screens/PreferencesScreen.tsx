@@ -1,11 +1,14 @@
+import { useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { appTheme } from '../theme';
 import {
   Button,
   Chip,
+  EmptyState,
   ScreenContainer,
   SectionHeader,
+  SkeletonBlock,
   SourceCard,
   SourceCardSkeleton,
 } from '../components/ui';
@@ -26,6 +29,12 @@ export function PreferencesScreen() {
 
   const selectedCategoryIds = userPreferencesQuery.data?.categoryIds ?? [];
   const selectedSourceIds = userPreferencesQuery.data?.sourceIds ?? [];
+  const isQueryError =
+    categoriesQuery.isError || sourcesQuery.isError || userPreferencesQuery.isError;
+
+  const handleRetry = useCallback(async () => {
+    await Promise.all([categoriesQuery.refetch(), sourcesQuery.refetch(), userPreferencesQuery.refetch()]);
+  }, [categoriesQuery, sourcesQuery, userPreferencesQuery]);
 
   const commitPreferences = (params: {
     categoryIds: string[];
@@ -70,77 +79,109 @@ export function PreferencesScreen() {
   return (
     <ScreenContainer scrollable>
       <View style={styles.heroCard}>
-        <Text style={styles.heroTitle}>Ilgi alanina gore filtrele</Text>
+        <Text style={styles.heroTitle}>İlgi alanına göre filtrele</Text>
         <Text style={styles.heroSubtitle}>
-          Senin icin onemli olan kategorileri ve kaynaklari secerek akisina yon ver.
+          Senin için önemli olan kategorileri ve kaynakları seçerek akışına yön ver.
         </Text>
       </View>
 
       {!isAuthenticated ? (
         <View style={styles.guestNotice}>
-          <Text style={styles.guestNoticeTitle}>Misafir modundasin</Text>
+          <Text style={styles.guestNoticeTitle}>Misafir modundasın</Text>
           <Text style={styles.guestNoticeBody}>
-            Tercihlerin bu cihazda saklanir. Hesapla giris yaparsan tercihlerin cihazlar arasi senkron olur.
+            Tercihlerin bu cihazda saklanır. Hesapla giriş yaparsan tercihlerin cihazlar arası senkron olur.
           </Text>
         </View>
       ) : null}
 
-      <View style={styles.section}>
-        <SectionHeader title="Kategori Tercihleri" />
-        <ScrollView
-          contentContainerStyle={styles.chipsWrap}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {(categoriesQuery.data ?? []).map((category) => (
-            <Chip
-              key={category.id}
-              label={category.name}
-              onPress={() => toggleCategory(category.id)}
-              selected={selectedCategoryIds.includes(category.id)}
-            />
-          ))}
-        </ScrollView>
-      </View>
+      {isQueryError ? (
+        <EmptyState
+          actionLabel="Tekrar Dene"
+          description="Tercih bilgileri yüklenirken bir sorun oluştu."
+          icon="warning"
+          onPressAction={() => {
+            void handleRetry();
+          }}
+          title="Tercihler yüklenemedi"
+        />
+      ) : null}
 
-      <View style={styles.section}>
-        <SectionHeader title="Kaynak Tercihleri" />
-        <View style={styles.sourceList}>
-          {sourcesQuery.isLoading ? (
-            <>
-              <SourceCardSkeleton />
-              <SourceCardSkeleton />
-              <SourceCardSkeleton />
-            </>
-          ) : (
-            (sourcesQuery.data?.items ?? []).map((source) => (
-              <SourceCard
-                key={source.id}
-                description={source.description ?? 'Haber kaynagi'}
-                imageUrl={source.logoUrl}
-                isFollowing={selectedSourceIds.includes(source.id)}
-                name={source.name}
-                onToggleFollow={() => toggleSource(source.id)}
-              />
-            ))
-          )}
-        </View>
-      </View>
+      {!isQueryError ? (
+        <>
+          <View style={styles.section}>
+            <SectionHeader title="Kategori Tercihleri" />
+            <ScrollView
+              contentContainerStyle={styles.chipsWrap}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {categoriesQuery.isLoading
+                ? (
+                    <>
+                      <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={72} />
+                      <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={96} />
+                      <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={88} />
+                    </>
+                  )
+                : (categoriesQuery.data ?? []).map((category) => (
+                    <Chip
+                      key={category.id}
+                      label={category.name}
+                      onPress={() => toggleCategory(category.id)}
+                      selected={selectedCategoryIds.includes(category.id)}
+                    />
+                  ))}
+            </ScrollView>
+          </View>
+
+          <View style={styles.section}>
+            <SectionHeader title="Kaynak Tercihleri" />
+            <View style={styles.sourceList}>
+              {sourcesQuery.isLoading ? (
+                <>
+                  <SourceCardSkeleton />
+                  <SourceCardSkeleton />
+                  <SourceCardSkeleton />
+                </>
+              ) : (sourcesQuery.data?.items ?? []).length === 0 ? (
+                <EmptyState
+                  description="Listelenecek aktif kaynak bulunamadı."
+                  icon="newspaper"
+                  title="Kaynak bulunamadı"
+                />
+              ) : (
+                (sourcesQuery.data?.items ?? []).map((source) => (
+                  <SourceCard
+                    key={source.id}
+                    description={source.description ?? 'Haber kaynağı'}
+                    imageUrl={source.logoUrl}
+                    isFollowing={selectedSourceIds.includes(source.id)}
+                    name={source.name}
+                    onToggleFollow={() => toggleSource(source.id)}
+                  />
+                ))
+              )}
+            </View>
+          </View>
+        </>
+      ) : null}
 
       {upsertPreferencesMutation.error ? (
         <Text style={styles.errorText}>
-          Tercihler kaydedilemedi. Baglantiyi kontrol edip tekrar dene.
+          Tercihler kaydedilemedi. Bağlantıyı kontrol edip tekrar dene.
         </Text>
       ) : null}
 
-      <Button
-        fullWidth
-        label="Tercihleri Sifirla"
-        loading={upsertPreferencesMutation.isPending}
-        onPress={resetPreferences}
-        size="lg"
-        variant="ghost"
-      />
+      {!isQueryError ? (
+        <Button
+          fullWidth
+          label="Tercihleri Sıfırla"
+          loading={upsertPreferencesMutation.isPending}
+          onPress={resetPreferences}
+          size="lg"
+          variant="ghost"
+        />
+      ) : null}
     </ScreenContainer>
   );
 }

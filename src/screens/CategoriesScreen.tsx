@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
 import { appTheme } from '../theme';
-import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, TopAppBar } from '../components/ui';
+import { ArticleCard, ArticleCardSkeleton, Chip, EmptyState, ScreenContainer, SkeletonBlock, TopAppBar } from '../components/ui';
 import { useArticlesQuery, useCategoriesQuery, useSourcesQuery } from '../hooks/queries';
 import { formatTimeAgoTr } from '../utils/date';
 import { useBookmarks } from '../hooks/useBookmarks';
@@ -53,6 +53,11 @@ export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Cate
 
   const selectedCategory = categoryItems.find((category) => category.id === selectedCategoryId);
   const selectedSource = (sourcesQuery.data?.items ?? []).find((source) => source.id === selectedSourceId);
+  const isError = categoriesQuery.isError || sourcesQuery.isError || articlesQuery.isError;
+
+  const handleRetry = useCallback(async () => {
+    await Promise.all([categoriesQuery.refetch(), sourcesQuery.refetch(), articlesQuery.refetch()]);
+  }, [articlesQuery, categoriesQuery, sourcesQuery]);
 
   return (
     <ScreenContainer scrollable>
@@ -72,14 +77,22 @@ export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Cate
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {categoryItems.map((category) => (
-          <Chip
-            key={category.id}
-            label={category.name}
-            onPress={() => setSelectedCategoryId(category.id)}
-            selected={category.id === selectedCategoryId}
-          />
-        ))}
+        {categoriesQuery.isLoading
+          ? (
+              <>
+                <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={68} />
+                <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={84} />
+                <SkeletonBlock borderRadius={appTheme.radii.full} height={appTheme.sizes.chipHeight} width={92} />
+              </>
+            )
+          : categoryItems.map((category) => (
+              <Chip
+                key={category.id}
+                label={category.name}
+                onPress={() => setSelectedCategoryId(category.id)}
+                selected={category.id === selectedCategoryId}
+              />
+            ))}
       </ScrollView>
 
       <ScrollView
@@ -101,6 +114,7 @@ export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Cate
         />
         <Chip
           icon="expand-more"
+          disabled={sourcesQuery.isLoading}
           label={selectedSource ? selectedSource.name : 'Kaynağa Göre'}
           onPress={() => {
             const sourceItems = sourcesQuery.data?.items ?? [];
@@ -132,7 +146,17 @@ export function CategoriesScreen({ navigation, route }: MainTabScreenProps<'Cate
       </ScrollView>
 
       <View style={styles.section}>
-        {articlesQuery.isLoading ? (
+        {isError ? (
+          <EmptyState
+            actionLabel="Tekrar Dene"
+            description="Kategori akışı yüklenirken bir sorun oluştu."
+            icon="warning"
+            onPressAction={() => {
+              void handleRetry();
+            }}
+            title="İçerik yüklenemedi"
+          />
+        ) : articlesQuery.isLoading ? (
           <>
             <ArticleCardSkeleton />
             <ArticleCardSkeleton />

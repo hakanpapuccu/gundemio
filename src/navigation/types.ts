@@ -15,6 +15,8 @@ export type MainTabParamList = {
 };
 
 export type RootStackParamList = {
+  SplashIntro: undefined;
+  Onboarding: undefined;
   MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
   ArticleDetail: {
     articleId: string;

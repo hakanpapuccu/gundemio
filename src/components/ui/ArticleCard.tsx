@@ -1,8 +1,9 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import type { ImageStyle, StyleProp, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 import { appTheme } from '../../theme';
 import { Icon } from './Icon';
+import { RemoteImage } from './RemoteImage';
 
 type ArticleCardVariant = 'featured' | 'compact';
 
@@ -37,7 +38,11 @@ export function ArticleCard({
     <Pressable accessibilityRole="button" onPress={onPress} style={[styles.base, style]}>
       {variant === 'featured' ? (
         <>
-          <ArticleImage imageUrl={imageUrl} style={styles.featuredImage} />
+          <RemoteImage
+            fallbackIconSize={appTheme.sizes.iconXl}
+            style={styles.featuredImage}
+            uri={imageUrl}
+          />
           <View style={styles.featuredContent}>
             {category ? (
               <View style={styles.categoryBadge}>
@@ -72,7 +77,10 @@ export function ArticleCard({
               <Pressable
                 accessibilityRole="button"
                 hitSlop={8}
-                onPress={onPressBookmark}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  onPressBookmark?.();
+                }}
                 style={styles.bookmarkButton}
               >
                 <Icon
@@ -83,27 +91,10 @@ export function ArticleCard({
               </Pressable>
             </View>
           </View>
-          <ArticleImage imageUrl={imageUrl} style={styles.compactImage} />
+          <RemoteImage style={styles.compactImage} uri={imageUrl} />
         </View>
       )}
     </Pressable>
-  );
-}
-
-type ArticleImageProps = {
-  imageUrl?: string | null;
-  style: StyleProp<ImageStyle>;
-};
-
-function ArticleImage({ imageUrl, style }: ArticleImageProps) {
-  if (imageUrl) {
-    return <Image source={{ uri: imageUrl }} style={[styles.imageBase, style]} />;
-  }
-
-  return (
-    <View style={[styles.imageBase, styles.imagePlaceholder, style as StyleProp<ViewStyle>]}>
-      <Icon color={appTheme.colors.textMuted} name="image" size={appTheme.sizes.iconLg} />
-    </View>
   );
 }
 
@@ -199,13 +190,5 @@ const styles = StyleSheet.create({
     borderRadius: appTheme.radii.sm,
     height: appTheme.sizes.articleThumb,
     width: appTheme.sizes.articleThumb,
-  },
-  imageBase: {
-    backgroundColor: appTheme.colors.surfaceMuted,
-    overflow: 'hidden',
-  },
-  imagePlaceholder: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

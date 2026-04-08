@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { RootStackScreenProps } from '../navigation/types';
@@ -32,6 +33,11 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
 
   const selectedSourceIds = userPreferencesQuery.data?.sourceIds ?? [];
   const isFollowing = source ? selectedSourceIds.includes(source.id) : false;
+  const hasArticlesError = Boolean(source) && articlesQuery.isError;
+
+  const handleRetry = useCallback(async () => {
+    await Promise.all([sourceQuery.refetch(), userPreferencesQuery.refetch(), articlesQuery.refetch()]);
+  }, [articlesQuery, sourceQuery, userPreferencesQuery]);
 
   const handleToggleFollow = () => {
     if (!source) {
@@ -54,12 +60,22 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
       <View style={styles.hero}>
         <Text style={styles.title}>{sourceName}</Text>
         <Text style={styles.subtitle}>
-          Kaynak profili, takip aksiyonlari ve yayin istatistikleri bu alanda gosterilir.
+          Kaynak profili, takip aksiyonları ve yayın istatistikleri bu alanda gösterilir.
         </Text>
       </View>
 
       {sourceQuery.isLoading ? (
         <SourceCardSkeleton />
+      ) : sourceQuery.isError ? (
+        <EmptyState
+          actionLabel="Tekrar Dene"
+          description="Kaynak detayları alınırken bir sorun oluştu."
+          icon="warning"
+          onPressAction={() => {
+            void handleRetry();
+          }}
+          title="Kaynağa erişilemedi"
+        />
       ) : source ? (
         <SourceCard
           description={source.description ?? 'Haber kaynağı'}
@@ -70,15 +86,15 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
         />
       ) : (
         <EmptyState
-          description="Bu kaynak bulunamadi veya artik aktif degil."
+          description="Bu kaynak bulunamadı veya artık aktif değil."
           icon="folder-open"
-          title="Kaynak Bulunamadi"
+          title="Kaynak Bulunamadı"
         />
       )}
 
       <Button
         fullWidth
-        label="Tercihleri Duzenle"
+        label="Tercihleri Düzenle"
         onPress={() => navigation.navigate('Preferences')}
         size="lg"
         variant="secondary"
@@ -86,16 +102,26 @@ export function SourceDetailScreen({ navigation, route }: RootStackScreenProps<'
 
       <View style={styles.section}>
         <SectionHeader title={`${sourceName} Son Haberler`} />
-        {articlesQuery.isLoading ? (
+        {hasArticlesError ? (
+          <EmptyState
+            actionLabel="Tekrar Dene"
+            description="Kaynağın haberleri yüklenirken bir sorun oluştu."
+            icon="warning"
+            onPressAction={() => {
+              void handleRetry();
+            }}
+            title="Haberler yüklenemedi"
+          />
+        ) : articlesQuery.isLoading ? (
           <>
             <ArticleCardSkeleton />
             <ArticleCardSkeleton />
           </>
         ) : (articlesQuery.data?.items ?? []).length === 0 ? (
           <EmptyState
-            description="Bu kaynaga ait yayinlanmis haber bulunamadi."
+            description="Bu kaynağa ait yayınlanmış haber bulunamadı."
             icon="folder-open"
-            title="Haber Bulunamadi"
+            title="Haber Bulunamadı"
           />
         ) : (
           (articlesQuery.data?.items ?? []).map((article) => (

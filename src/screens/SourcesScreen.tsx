@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { RootStackScreenProps } from '../navigation/types';
@@ -97,6 +97,25 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
   };
 
   const isLoading = userPreferencesQuery.isLoading || (shouldFetchSources && sourcesQuery.isLoading);
+  const isError =
+    userPreferencesQuery.isError ||
+    categoriesQuery.isError ||
+    (shouldFetchSources && sourcesQuery.isError);
+  const isRefreshing =
+    userPreferencesQuery.isRefetching ||
+    categoriesQuery.isRefetching ||
+    (shouldFetchSources && sourcesQuery.isRefetching);
+
+  const handleRetry = useCallback(async () => {
+    const requests: Promise<unknown>[] = [
+      userPreferencesQuery.refetch(),
+      categoriesQuery.refetch(),
+    ];
+    if (shouldFetchSources) {
+      requests.push(sourcesQuery.refetch());
+    }
+    await Promise.all(requests);
+  }, [categoriesQuery, shouldFetchSources, sourcesQuery, userPreferencesQuery]);
 
   const getEmptyState = () => {
     if (activeTab === 'followed') {
@@ -154,10 +173,23 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
             <SourceCardSkeleton />
             <SourceCardSkeleton />
           </View>
+        ) : isError ? (
+          <View style={styles.errorWrap}>
+            <EmptyState
+              actionLabel="Tekrar Dene"
+              description="Kaynak listesi yüklenirken bir sorun oluştu."
+              icon="warning"
+              onPressAction={() => {
+                void handleRetry();
+              }}
+              title="Kaynaklar yüklenemedi"
+            />
+          </View>
         ) : (
           <FlatList
             contentContainerStyle={styles.listContent}
             data={sourceItems}
+            initialNumToRender={8}
             keyExtractor={(item) => item.id}
             ListEmptyComponent={
               <EmptyState
@@ -166,6 +198,12 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
                 title={getEmptyState().title}
               />
             }
+            maxToRenderPerBatch={8}
+            onRefresh={() => {
+              void handleRetry();
+            }}
+            refreshing={isRefreshing}
+            removeClippedSubviews
             renderItem={({ item }) => {
               const categoryName = item.categoryId ? categoryNameById[item.categoryId] : null;
               const descriptionParts = [categoryName, item.description].filter(Boolean);
@@ -186,9 +224,14 @@ export function SourcesScreen({ navigation, route }: RootStackScreenProps<'Sourc
               );
             }}
             showsVerticalScrollIndicator={false}
+            windowSize={7}
           />
         )}
       </View>
+
+      {upsertPreferencesMutation.error ? (
+        <Text style={styles.errorText}>Takip tercihi kaydedilemedi. Lütfen tekrar dene.</Text>
+      ) : null}
     </ScreenContainer>
   );
 }
@@ -231,6 +274,9 @@ const styles = StyleSheet.create({
   listWrap: {
     flex: 1,
   },
+  errorWrap: {
+    paddingHorizontal: appTheme.spacing.lg,
+  },
   loadingList: {
     gap: appTheme.spacing.xs,
     paddingTop: appTheme.spacing.xs,
@@ -238,5 +284,13 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: appTheme.spacing.xxxl,
     paddingTop: appTheme.spacing.xs,
+  },
+  errorText: {
+    color: appTheme.colors.danger,
+    fontFamily: appTheme.typography.fontFamily.body,
+    fontSize: appTheme.typography.fontSize.sm,
+    lineHeight: appTheme.typography.lineHeight.sm,
+    paddingHorizontal: appTheme.spacing.lg,
+    paddingTop: appTheme.spacing.sm,
   },
 });

@@ -51,29 +51,32 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
     await Promise.all([categoriesQuery.refetch(), articlesQuery.refetch()]);
   }, [articlesQuery, categoriesQuery]);
 
-  const renderArticleItem = ({ item }: ListRenderItemInfo<Article>) => {
-    const bookmarked = isBookmarked(item.id, item.isFavorite);
+  const renderArticleItem = useCallback(
+    ({ item }: ListRenderItemInfo<Article>) => {
+      const bookmarked = isBookmarked(item.id, item.isFavorite);
 
-    return (
-      <ArticleCard
-        bookmarked={bookmarked}
-        imageUrl={item.imageUrl}
-        onPress={() =>
-          navigation.navigate('ArticleDetail', {
-            articleId: item.id,
-            title: item.title,
-          })
-        }
-        onPressBookmark={() => toggleBookmark(item.id, !bookmarked)}
-        publishedLabel={formatTimeAgoTr(item.publishedAt)}
-        source={item.sourceName}
-        style={styles.feedCard}
-        summary={item.summary ?? undefined}
-        title={item.title}
-        variant="compact"
-      />
-    );
-  };
+      return (
+        <ArticleCard
+          bookmarked={bookmarked}
+          imageUrl={item.imageUrl}
+          onPress={() =>
+            navigation.navigate('ArticleDetail', {
+              articleId: item.id,
+              title: item.title,
+            })
+          }
+          onPressBookmark={() => toggleBookmark(item.id, !bookmarked)}
+          publishedLabel={formatTimeAgoTr(item.publishedAt)}
+          source={item.sourceName}
+          style={styles.feedCard}
+          summary={item.summary ?? undefined}
+          title={item.title}
+          variant="compact"
+        />
+      );
+    },
+    [isBookmarked, navigation, toggleBookmark]
+  );
 
   const renderCategoryChips = () => {
     if (categoriesQuery.isLoading) {
@@ -200,9 +203,12 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
         <FlatList
           contentContainerStyle={styles.listContent}
           data={feedArticles}
+          initialNumToRender={5}
           keyExtractor={(item) => item.id}
           ListEmptyComponent={renderEmptyState}
           ListHeaderComponent={renderListHeader}
+          maxToRenderPerBatch={6}
+          removeClippedSubviews
           refreshControl={
             <RefreshControl
               colors={[appTheme.colors.primary]}
@@ -215,6 +221,7 @@ export function HomeScreen({ navigation }: MainTabScreenProps<'Home'>) {
           }
           renderItem={renderArticleItem}
           showsVerticalScrollIndicator={false}
+          windowSize={7}
         />
       )}
     </ScreenContainer>

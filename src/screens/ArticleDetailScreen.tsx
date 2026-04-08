@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
-  Image,
   Linking,
   Pressable,
   Share,
@@ -20,6 +19,7 @@ import {
   ScreenContainer,
   SectionHeader,
   SkeletonBlock,
+  RemoteImage,
 } from '../components/ui';
 import {
   useArticleByIdQuery,
@@ -48,7 +48,7 @@ function buildReadingTimeLabel(article: Article | null | undefined) {
 
   const words = text.split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
-  return `${minutes} dk okuma suresi`;
+  return `${minutes} dk okuma süresi`;
 }
 
 function splitContentParagraphs(content: string | null | undefined) {
@@ -69,26 +69,12 @@ type ArticleImageProps = {
 };
 
 function ArticleImage({ imageUrl, height, borderRadius = 0 }: ArticleImageProps) {
-  const [hasImageError, setHasImageError] = useState(false);
-
-  useEffect(() => {
-    setHasImageError(false);
-  }, [imageUrl]);
-
-  if (imageUrl && !hasImageError) {
-    return (
-      <Image
-        onError={() => setHasImageError(true)}
-        source={{ uri: imageUrl }}
-        style={[styles.imageBase, { height, borderRadius }]}
-      />
-    );
-  }
-
   return (
-    <View style={[styles.imageBase, styles.imageFallback, { height, borderRadius }]}>
-      <Icon color={appTheme.colors.textMuted} name="image" size={appTheme.sizes.iconXl} />
-    </View>
+    <RemoteImage
+      fallbackIconSize={appTheme.sizes.iconXl}
+      style={[styles.imageBase, { height, borderRadius }]}
+      uri={imageUrl}
+    />
   );
 }
 
@@ -328,13 +314,25 @@ export function ArticleDetailScreen({
     >
       {articleQuery.isLoading ? (
         <DetailLoadingState />
+      ) : articleQuery.isError ? (
+        <View style={styles.contentContainer}>
+          <EmptyState
+            actionLabel="Tekrar Dene"
+            description="Haber detayı yüklenirken bir sorun oluştu."
+            icon="warning"
+            onPressAction={() => {
+              void articleQuery.refetch();
+            }}
+            title="Habere erişilemedi"
+          />
+        </View>
       ) : !article ? (
         <View style={styles.contentContainer}>
           <EmptyState
-            actionLabel="Ana Sayfaya Don"
-            description="Bu haber bulunamadi veya kaldirilmis olabilir."
+            actionLabel="Ana Sayfaya Dön"
+            description="Bu haber bulunamadı veya kaldırılmış olabilir."
             onPressAction={() => navigation.navigate('MainTabs', { screen: 'Home' })}
-            title="Haber Bulunamadi"
+            title="Haber Bulunamadı"
           />
         </View>
       ) : (
@@ -361,7 +359,7 @@ export function ArticleDetailScreen({
               />
               <QuickActionButton
                 icon="share"
-                label="Paylas"
+                label="Paylaş"
                 onPress={() => {
                   void handleShare();
                 }}
@@ -388,11 +386,11 @@ export function ArticleDetailScreen({
               ) : (
                 <View style={styles.partialContentCard}>
                   <Text style={styles.partialContentTitle}>
-                    Detayli icerik henuz mevcut degil
+                    Detaylı içerik henüz mevcut değil
                   </Text>
                   <Text style={styles.partialContentDescription}>
-                    Bu haberin tam metni kaynaktan cekilemedi. Orijinal baglantiya
-                    giderek haberi tam haliyle okuyabilirsin.
+                    Bu haberin tam metni kaynaktan çekilemedi. Orijinal bağlantıya
+                    giderek haberi tam hâliyle okuyabilirsin.
                   </Text>
                 </View>
               )}
@@ -400,7 +398,7 @@ export function ArticleDetailScreen({
 
             <Button
               fullWidth
-              label="Orijinal Kaynaga Git"
+              label="Orijinal Kaynağa Git"
               onPress={() => {
                 void handleOpenOriginalSource();
               }}
@@ -411,7 +409,7 @@ export function ArticleDetailScreen({
 
           <View style={styles.relatedSection}>
             <View style={styles.relatedSectionHeader}>
-              <SectionHeader title="Ilgili Haberler" />
+              <SectionHeader title="İlgili Haberler" />
             </View>
             <View style={styles.relatedList}>
               {relatedArticlesQuery.isLoading ? (
@@ -419,12 +417,24 @@ export function ArticleDetailScreen({
                   <SkeletonBlock borderRadius={appTheme.radii.md} height={120} />
                   <SkeletonBlock borderRadius={appTheme.radii.md} height={120} />
                 </>
+              ) : relatedArticlesQuery.isError ? (
+                <View style={styles.contentContainer}>
+                  <EmptyState
+                    actionLabel="Tekrar Dene"
+                    description="İlgili haberler alınırken bir sorun oluştu."
+                    icon="warning"
+                    onPressAction={() => {
+                      void relatedArticlesQuery.refetch();
+                    }}
+                    title="İlgili haberler yüklenemedi"
+                  />
+                </View>
               ) : relatedArticles.length === 0 ? (
                 <View style={styles.contentContainer}>
                   <EmptyState
-                    description="Bu kaynakta gosterilecek baska haber bulunamadi."
+                    description="Bu kaynakta gösterilecek başka haber bulunamadı."
                     icon="folder-open"
-                    title="Ilgili Haber Yok"
+                    title="İlgili Haber Yok"
                   />
                 </View>
               ) : (
@@ -466,10 +476,6 @@ const styles = StyleSheet.create({
   imageBase: {
     backgroundColor: appTheme.colors.surfaceMuted,
     width: '100%',
-  },
-  imageFallback: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   contentContainer: {
     gap: appTheme.spacing.lg,

@@ -1,9 +1,9 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import { appTheme } from '../../theme';
 import { Button } from './Button';
-import { Icon } from './Icon';
+import { RemoteImage } from './RemoteImage';
 
 type SourceCardProps = {
   name: string;
@@ -27,18 +27,17 @@ export function SourceCard({
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={[styles.container, style]}>
       <View style={styles.infoRow}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.avatar} />
-        ) : (
-          <View style={[styles.avatar, styles.avatarPlaceholder]}>
-            <Icon name="newspaper" size={appTheme.sizes.iconLg} color={appTheme.colors.textMuted} />
-          </View>
-        )}
+        <RemoteImage
+          fallbackIcon="newspaper"
+          fallbackIconSize={appTheme.sizes.iconLg}
+          style={styles.avatar}
+          uri={imageUrl}
+        />
         <View style={styles.textContent}>
           <Text numberOfLines={1} style={styles.name}>
             {name}
           </Text>
-          <Text numberOfLines={1} style={styles.description}>
+          <Text numberOfLines={2} style={styles.description}>
             {description}
           </Text>
         </View>
@@ -46,7 +45,10 @@ export function SourceCard({
 
       <Button
         label={isFollowing ? 'Takip Ediliyor' : 'Takip Et'}
-        onPress={onToggleFollow}
+        onPress={(event) => {
+          event.stopPropagation();
+          onToggleFollow?.();
+        }}
         size="sm"
         variant={isFollowing ? 'secondary' : 'primary'}
       />
@@ -81,11 +83,6 @@ const styles = StyleSheet.create({
     height: appTheme.sizes.sourceAvatar,
     width: appTheme.sizes.sourceAvatar,
   },
-  avatarPlaceholder: {
-    alignItems: 'center',
-    backgroundColor: appTheme.colors.surfaceMuted,
-    justifyContent: 'center',
-  },
   textContent: {
     flex: 1,
     minWidth: 0,
@@ -100,7 +97,7 @@ const styles = StyleSheet.create({
   description: {
     color: appTheme.colors.textSecondary,
     fontFamily: appTheme.typography.fontFamily.body,
-    fontSize: appTheme.typography.fontSize.md,
-    lineHeight: appTheme.typography.lineHeight.md,
+    fontSize: appTheme.typography.fontSize.sm,
+    lineHeight: appTheme.typography.lineHeight.sm,
   },
 });

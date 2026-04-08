@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { MainTabScreenProps } from '../navigation/types';
@@ -49,12 +49,19 @@ export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
     [articlesQuery.data?.items, isBookmarked]
   );
 
-  const displayedArticles = activeFilter === 'all' ? savedArticles : savedArticles;
+  const displayedArticles = activeFilter === 'all'
+    ? savedArticles
+    : savedArticles.filter((article) => article.isFavorite);
   const hasSavedArticles = displayedArticles.length > 0;
+  const isError = articlesQuery.isError;
   const isLoading =
     isBookmarksLoading ||
     (!hasHydrated && normalizedFavoriteArticleIds.length === 0) ||
     (normalizedFavoriteArticleIds.length > 0 && articlesQuery.isLoading);
+
+  const handleRetry = useCallback(async () => {
+    await articlesQuery.refetch();
+  }, [articlesQuery]);
 
   return (
     <ScreenContainer scrollable style={styles.container}>
@@ -88,6 +95,16 @@ export function SavedScreen({ navigation }: MainTabScreenProps<'Saved'>) {
           <ArticleCardSkeleton />
           <ArticleCardSkeleton />
         </View>
+      ) : isError ? (
+        <EmptyState
+          actionLabel="Tekrar Dene"
+          description="Kaydedilen haberler yüklenirken bir sorun oluştu."
+          icon="warning"
+          onPressAction={() => {
+            void handleRetry();
+          }}
+          title="Kaydedilenler yüklenemedi"
+        />
       ) : hasSavedArticles ? (
         <View style={styles.list}>
           {displayedArticles.map((article) => (
